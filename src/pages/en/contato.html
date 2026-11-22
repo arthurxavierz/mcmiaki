@@ -1,0 +1,55 @@
+<!--meta {"title": "Contact", "description": "Contact MC Miaki Coffee: phone +55 34 3831-1481, email contato@mcmiaki.coffee, Av. Faria Pereira, 4153, Distrito Industrial, Patrocínio, MG, Brazil. Green coffee, samples, storage and farm visits.", "nav": "contato", "theme": "light"} -->
+
+<section class="page-hero rows-bg">
+  <div class="wrap">
+    <nav class="crumbs label" aria-label="You are here"><a href="index.html">Home</a><span>/</span><span>Contact</span></nav>
+    <h1 class="display mega"><span class="line"><span>Talk to</span></span><span class="line"><span class="accent">MC Miaki</span></span></h1>
+    <div class="page-hero-grid">
+      <p class="lead muted">Buyers, roasters, growers, press or anyone who wants to visit the farm: write to us and we will get back to you soon. We reply in English.</p>
+      <a class="btn btn-solid" href="tel:{{TEL}}">{{ICON:phone}} {{TELEFONE}}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section white-bg" aria-label="Channels">
+  <div class="wrap">
+    {{CANAIS}}
+  </div>
+</section>
+
+<section class="section dark" aria-labelledby="form-title">
+  <div class="wrap form-wrap">
+    <div>
+      <span class="label muted">Message</span>
+      <h2 class="display lg" id="form-title" style="margin:18px 0 22px" data-split>Tell us what <span class="accent">you are looking for.</span></h2>
+      <p class="lead muted">The form opens your email app with the message ready for {{EMAIL}}. For lots and samples, tell us the cup profile, volume and destination port or city.</p>
+    </div>
+    <form class="form" data-form data-to="{{EMAIL}}" data-msg-err="Please fill in your name and message." data-msg-ok="Your email app opened with the message ready. Just hit send." data-sign="(sent from the website)" data-default="Website inquiry" novalidate>
+      <fieldset>
+        <legend>Subject</legend>
+        <div class="chips">
+          <label><input type="radio" name="assunto" value="Buy coffee" checked><span>Buy coffee</span></label>
+          <label><input type="radio" name="assunto" value="Samples"><span>Samples</span></label>
+          <label><input type="radio" name="assunto" value="Storage"><span>Storage</span></label>
+          <label><input type="radio" name="assunto" value="Farm visit"><span>Visit</span></label>
+          <label><input type="radio" name="assunto" value="Press"><span>Press</span></label>
+          <label><input type="radio" name="assunto" value="Other"><span>Other</span></label>
+        </div>
+      </fieldset>
+      <div class="field-row">
+        <label><span>Name</span><input name="nome" autocomplete="name" required></label>
+        <label><span>Company</span><input name="empresa" autocomplete="organization"></label>
+      </div>
+      <label><span>Phone or WhatsApp</span><input name="fone" type="tel" autocomplete="tel"></label>
+      <label><span>Message</span><textarea name="mensagem" rows="4" required></textarea></label>
+      <div><button class="btn btn-solid" type="submit">Send message {{ARROW}}</button></div>
+      <p class="form-note" data-note>Nothing is sent until you confirm it in your email.</p>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="mapa" aria-label="Map">
+  <div class="wrap">
+    {{MAPA}}
+  </div>
+</section>

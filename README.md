@@ -1,14 +1,14 @@
 # MC Miaki Coffee · site
 
-Site institucional da MC Miaki Coffee (cafés especiais, Chapadão de Ferro, Patrocínio, MG), no molde do site do Escritório Eficaz: várias páginas, gerador em Python, sem framework.
+Site institucional da MC Miaki Coffee (cafés especiais, Chapadão de Ferro, Patrocínio, MG), no molde do site do Escritório Eficaz: várias páginas, gerador em Python, sem framework. Em português e inglês (bandeiras no canto superior direito de todas as páginas; a versão em inglês fica em `/en/`).
 
 - No ar: https://mcmiaki.achillesmedia.com.br (GitHub `arthurxavierz/mcmiaki` → Netlify `mcmiaki` → CNAME na Cloudflare, DNS only)
 - Site antigo: https://mcmiaki.coffee · Instagram: https://www.instagram.com/mcmiaki/
 
 ## Como editar
 1. Dados (contato, núcleos, prêmios, galeria, vídeos, links úteis) ficam no topo de `src/build.py`.
-2. Textos de cada página ficam em `src/pages/*.html`.
-3. Rode `python src/build.py`. Ele gera `dist/*.html` e o `sitemap.xml`, e recusa travessão no texto.
+2. Textos de cada página ficam em `src/pages/*.html` (português) e `src/pages/en/*.html` (inglês, mesmo nome de arquivo). Os textos que vêm dos dados são traduzidos em `src/i18n_en.py`; o build avisa se faltar tradução.
+3. Rode `python src/build.py`. Ele gera `dist/*.html`, `dist/en/*.html` e o `sitemap.xml`, e recusa travessão no texto.
 4. Mudou CSS ou JS (`dist/assets/css/style.css`, `dist/assets/js/main.js`)? Suba o `V` no `build.py` e rode de novo.
 5. Push na `main` publica no Netlify.
 
@@ -22,6 +22,8 @@ Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja 
 
 ## Mídia
 - Vídeos de drone em `dist/assets/video/` são cortes dos filmes do próprio canal da MC Miaki no YouTube (originais em `_raw/yt`, fora do git). O hero junta 5 tomadas (`hero.mp4` 1440 px e `hero-m.mp4` vertical).
+- `dist/assets/video/films/{id}.mp4` são recortes mudos de 7 s de cada filme (lista `VIDEOS` no `build.py`), usados como prévia em movimento na sala de filmes da home, nos filmes em destaque (Sobre, História, Qualidade) e na grade de Fotos e vídeos. O clique abre o filme completo do YouTube.
+- O galho do hero (ciclo da safra: florada, chumbinho, granação, maturação, colheita) é desenhado em código no `main.js`; os textos de cada fase ficam no atributo `data-ciclo` da home.
 - Fotos em `dist/assets/img/` vêm do acervo do site antigo.
 
 ## Validar com o cliente antes de vender
