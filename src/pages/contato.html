@@ -1,0 +1,55 @@
+<!--meta {"title": "Contato", "description": "Fale com a MC Miaki Coffee: telefone (34) 3831-1481, e-mail contato@mcmiaki.coffee, Av. Faria Pereira, 4153, Distrito Industrial, Patrocínio, MG. Compra de café, amostras, armazenagem e visitas.", "nav": "contato", "theme": "light"} -->
+
+<section class="page-hero rows-bg">
+  <div class="wrap">
+    <nav class="crumbs label" aria-label="Você está em"><a href="index.html">Início</a><span>/</span><span>Contato</span></nav>
+    <h1 class="display mega"><span class="line"><span>Fale com a</span></span><span class="line"><span class="accent">MC Miaki</span></span></h1>
+    <div class="page-hero-grid">
+      <p class="lead muted">Compradores, torrefações, produtores, imprensa ou quem quer conhecer a fazenda: escreva para a gente e retornamos o quanto antes.</p>
+      <a class="btn btn-solid" href="tel:{{TEL}}">{{ICON:phone}} {{TELEFONE}}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section white-bg" aria-label="Canais">
+  <div class="wrap">
+    {{CANAIS}}
+  </div>
+</section>
+
+<section class="section dark" aria-labelledby="form-title">
+  <div class="wrap form-wrap">
+    <div>
+      <span class="label muted">Mensagem</span>
+      <h2 class="display lg" id="form-title" style="margin:18px 0 22px" data-split>Conte o que <span class="accent">você procura.</span></h2>
+      <p class="lead muted">O formulário abre o seu e-mail com a mensagem pronta para {{EMAIL}}. Para lotes e amostras, diga o perfil de xícara, o volume e o porto ou cidade de destino.</p>
+    </div>
+    <form class="form" data-form data-to="{{EMAIL}}" novalidate>
+      <fieldset>
+        <legend>Assunto</legend>
+        <div class="chips">
+          <label><input type="radio" name="assunto" value="Comprar café" checked><span>Comprar café</span></label>
+          <label><input type="radio" name="assunto" value="Amostras"><span>Amostras</span></label>
+          <label><input type="radio" name="assunto" value="Armazenagem"><span>Armazenagem</span></label>
+          <label><input type="radio" name="assunto" value="Visita à fazenda"><span>Visita</span></label>
+          <label><input type="radio" name="assunto" value="Imprensa"><span>Imprensa</span></label>
+          <label><input type="radio" name="assunto" value="Outro assunto"><span>Outro</span></label>
+        </div>
+      </fieldset>
+      <div class="field-row">
+        <label><span>Nome</span><input name="nome" autocomplete="name" required></label>
+        <label><span>Empresa</span><input name="empresa" autocomplete="organization"></label>
+      </div>
+      <label><span>Telefone ou WhatsApp</span><input name="fone" type="tel" autocomplete="tel"></label>
+      <label><span>Mensagem</span><textarea name="mensagem" rows="4" required></textarea></label>
+      <div><button class="btn btn-solid" type="submit">Enviar mensagem {{ARROW}}</button></div>
+      <p class="form-note" data-note>Nada é enviado sem você confirmar no seu e-mail.</p>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="mapa" aria-label="Mapa">
+  <div class="wrap">
+    {{MAPA}}
+  </div>
+</section>

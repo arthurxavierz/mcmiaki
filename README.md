@@ -1,28 +1,33 @@
 # MC Miaki Coffee · site
 
-Site estático de prospecção para a MC Miaki Coffee (cafés especiais, Chapadão de Ferro, Patrocínio, MG).
-Sem build: tudo que vai ao ar está em `dist/`.
+Site institucional da MC Miaki Coffee (cafés especiais, Chapadão de Ferro, Patrocínio, MG), no molde do site do Escritório Eficaz: várias páginas, gerador em Python, sem framework.
 
-- Site antigo: https://mcmiaki.coffee (WordPress de 2021, conteúdo completo mas desatualizado)
-- Instagram: https://www.instagram.com/mcmiaki/
-- Domínio provisório: https://mcmiaki.achillesmedia.com.br
+- No ar: https://mcmiaki.achillesmedia.com.br (GitHub `arthurxavierz/mcmiaki` → Netlify `mcmiaki` → CNAME na Cloudflare, DNS only)
+- Site antigo: https://mcmiaki.coffee · Instagram: https://www.instagram.com/mcmiaki/
 
-## Estrutura
-- `dist/index.html` página única: abertura (altímetro até 1.250 m), hero com fotos aéreas reais e curvas de nível vivas em canvas, manifesto, terroir (corte do vulcão em 4 etapas pela rolagem), história (linha do tempo horizontal), família, núcleos (gráfico de altitude + ficha técnica), processo da muda à xícara (horizontal), quatro processos, sustentabilidade e selos, prêmios, Cafeeira Porta do Céu, galeria, contato.
-- `dist/styles.css` e `dist/app.js` versionados com `?v=N` no HTML. **A cada deploy que mexe em CSS ou JS, suba o N.**
-- `dist/assets/img/` fotos reais do acervo do site antigo, redimensionadas (máx. 1800 px).
-- `dist/assets/selos/` selos de certificação do site antigo.
-- `_raw/` site antigo baixado e originais (fora do git).
-- Dados dos núcleos ficam no array `NUCLEOS` do `app.js`.
+## Como editar
+1. Dados (contato, núcleos, prêmios, galeria, vídeos, links úteis) ficam no topo de `src/build.py`.
+2. Textos de cada página ficam em `src/pages/*.html`.
+3. Rode `python src/build.py`. Ele gera `dist/*.html` e o `sitemap.xml`, e recusa travessão no texto.
+4. Mudou CSS ou JS (`dist/assets/css/style.css`, `dist/assets/js/main.js`)? Suba o `V` no `build.py` e rode de novo.
+5. Push na `main` publica no Netlify.
 
-## Fontes do conteúdo
-- Site antigo: história, terroir, fichas dos 6 núcleos, certificações, prêmios até 2020, Cafeeira Porta do Céu.
-- Instagram (até 11/2025): endereço novo (Av. Faria Pereira, 4153, Distrito Industrial), prêmio de produtividade do 33º Seminário do Café da ACARPA (2025), agricultura regenerativa com braquiária, irrigação, treinamentos de NR, fauna.
+Preview local: config `mcmiaki` (porta 5290) no `.claude/launch.json` da pasta da agência.
+
+## Páginas
+Início, Sobre (gestão, terroir com o corte do vulcão, sustentabilidade, certificações, Cafeeira Porta do Céu), História (linha do tempo e prêmios), Fazendas (gráfico de altitude e fichas dos 6 núcleos), Qualidade (4 processamentos e 12 etapas), Fotos e vídeos (galeria com filtro e filmes do YouTube), Links úteis (busca e filtro) e Contato (canais, formulário que abre o e-mail, mapa).
+
+## Identidade
+Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja da marca. Anton nos títulos, Geist no texto, Geist Mono em rótulos.
+
+## Mídia
+- Vídeos de drone em `dist/assets/video/` são cortes dos filmes do próprio canal da MC Miaki no YouTube (originais em `_raw/yt`, fora do git). O hero junta 5 tomadas (`hero.mp4` 1440 px e `hero-m.mp4` vertical).
+- Fotos em `dist/assets/img/` vêm do acervo do site antigo.
 
 ## Validar com o cliente antes de vender
-- [ ] Datas da linha do tempo: o site antigo lista Anos 30, Anos 70, 1978, Anos 90, 2000, 2015, 2018 e 2019 sem casar todos os textos. Usei 1935 para a primeira propriedade e 2018 para a Miaki Agronegócios.
-- [ ] Área: o texto fala em 2.665 ha de café; a soma das fichas cultivadas dá cerca de 2.418 ha (dados de épocas diferentes).
-- [ ] Qual foi o concurso de qualidade de outubro de 2025 citado pela Amanda (entraria em Prêmios).
-- [ ] WhatsApp comercial (hoje só telefone fixo e e-mail; o formulário abre o e-mail com a mensagem pronta).
-- [ ] Se querem versão em inglês para compradores de fora (o site antigo tinha bandeira dos EUA).
-- [ ] Vídeo de drone próprio para o hero (o YouTube deles tem voos; hoje o hero usa fotos aéreas).
+- [ ] Datas da linha do tempo (o site antigo não casa todas as datas com os textos). Usei 1935 para a primeira propriedade e 2018 para a Miaki Agronegócios.
+- [ ] Área: o texto oficial fala em 2.665 ha de café; a soma das fichas cultivadas dá cerca de 2.418 ha (dados de épocas diferentes).
+- [ ] Concurso de qualidade de outubro de 2025 citado pela Amanda (entraria em Prêmios).
+- [ ] WhatsApp comercial e horário de atendimento (hoje só telefone fixo e e-mail).
+- [ ] Fotos da família para os cartões da gestão (hoje usam iniciais).
+- [ ] Versão em inglês para compradores de fora.
