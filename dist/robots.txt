@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mcmiaki.achillesmedia.com.br/sitemap.xml
