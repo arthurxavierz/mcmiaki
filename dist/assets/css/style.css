@@ -755,3 +755,4 @@ html.intro .curtain { display: grid; place-items: center; align-content: center;
 }
 .hero-title .fill .ch { padding-top: .28em; margin-top: -.28em; }
 @media (max-width: 900px) { .alt-zone .label { display: none; } .alt-chart { margin-top: 30px; } }
+.stamp { top: auto; bottom: 30px; right: 16px; }
