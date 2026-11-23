@@ -18,3 +18,13 @@
   for = "/assets/video/*"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
+
+[[redirects]]
+  from = "/links-uteis.html"
+  to = "/certificacoes.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/links-uteis.html"
+  to = "/en/certificacoes.html"
+  status = 301

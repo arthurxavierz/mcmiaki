@@ -15,7 +15,7 @@ Site institucional da MC Miaki Coffee (cafés especiais, Chapadão de Ferro, Pat
 Preview local: config `mcmiaki` (porta 5290) no `.claude/launch.json` da pasta da agência.
 
 ## Páginas
-Início, Sobre (gestão, terroir com o corte do vulcão, sustentabilidade, certificações, Cafeeira Porta do Céu), História (linha do tempo e prêmios), Fazendas (gráfico de altitude e fichas dos 6 núcleos), Qualidade (4 processamentos e 12 etapas), Fotos e vídeos (galeria com filtro e filmes do YouTube), Links úteis (busca e filtro) e Contato (canais, formulário que abre o e-mail, mapa).
+Início, Sobre (gestão, terroir com o corte do vulcão, sustentabilidade, certificações, Cafeeira Porta do Céu), História (linha do tempo e prêmios), Fazendas (gráfico de altitude e fichas dos 6 núcleos), Qualidade (4 processamentos e 12 etapas), Fotos e vídeos (galeria com filtro e filmes do YouTube), Certificações (os 5 selos em detalhe, o que garantem e os prêmios) e Contato (canais, formulário que abre o e-mail, mapa).
 
 ## Identidade
 Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja da marca. Anton nos títulos, Geist no texto, Geist Mono em rótulos.

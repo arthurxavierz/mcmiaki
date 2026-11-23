@@ -822,3 +822,39 @@ html.intro .curtain { display: grid; place-items: center; align-content: center;
   .lang { gap: 5px; padding-left: 10px; margin-left: 2px; }
   .lang a { width: 24px; height: 17px; }
 }
+
+/* ---------- Trava lateral e fundo atrás da página ----------
+   overflow-x: clip corta qualquer sobra sem criar barra de rolagem (não quebra o sticky);
+   o fundo escuro no html evita a faixa clara quando o celular "quica" no fim do rodapé. */
+html { background: var(--ink); overflow-x: hidden; }
+body { overflow-x: visible; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+body { position: relative; width: 100%; max-width: 100%; }
+main, .site-footer, .site-header { max-width: 100%; }
+img, video, svg, iframe { max-width: 100%; }
+.site-footer { overflow: clip; }
+.site-footer::after { content: ""; display: block; height: env(safe-area-inset-bottom, 0px); }
+
+/* ---------- Página Certificações ---------- */
+.certs { display: grid; gap: 14px; }
+.cert { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: clamp(20px, 4vw, 64px); align-items: start; background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: clamp(22px, 3.4vw, 48px); scroll-margin-top: calc(var(--header-h) + 20px); }
+.cert-logo { display: grid; gap: 18px; align-content: start; }
+.cert-logo img { width: 100%; max-width: 220px; height: 130px; object-fit: contain; object-position: left center; }
+.cert-body h2 { font-size: clamp(32px, 4.4vw, 64px); line-height: .95; text-transform: uppercase; font-weight: 400; margin: 12px 0 18px; overflow-wrap: anywhere; }
+.cert-body p { margin: 0; font-size: clamp(16px, 1.25vw, 18.5px); line-height: 1.6; color: var(--muted); max-width: 62ch; }
+.cert-pil { list-style: none; margin: 24px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cert-pil li { display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 6px; background: var(--paper); font-size: 14.5px; line-height: 1.4; }
+.cert-pil svg { flex: 0 0 18px; width: 18px; height: 18px; color: var(--green); margin-top: 1px; }
+.cert-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 20px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; }
+.cert-scope { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.cert-scope::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.cert-foot a { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; overflow-wrap: anywhere; }
+.cert-foot a svg { width: 14px; height: 14px; }
+.cert-foot a:hover { color: var(--green); border-color: var(--green); }
+.site-footer .creds a:hover { color: var(--green-lt); }
+@media (max-width: 900px) {
+  .cert { grid-template-columns: 1fr; }
+  .cert-logo { grid-template-columns: 1fr auto; align-items: center; }
+  .cert-logo img { height: 84px; max-width: 170px; }
+  .cert-pil { grid-template-columns: 1fr; }
+}

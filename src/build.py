@@ -22,7 +22,7 @@ Marcadores disponíveis dentro das páginas:
   {{CINE}}              sala de cinema: tela grande + lista dos primeiros filmes (home)
   {{FILME:id}}          um filme em destaque, largo, com prévia em movimento
   {{VIDEOS}}            todos os filmes em grade, com prévia em movimento
-  {{LINKS}}             links úteis com busca e filtros
+  {{CERTS}}             cartões completos das certificações
   {{CANAIS}}            grade de canais de contato
   {{MAPA}}              mapa com botões de rota
 
@@ -41,7 +41,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = ROOT / "src" / "pages"
 OUT = ROOT / "dist"
 SITE = "https://mcmiaki.achillesmedia.com.br"
-V = "5"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
+V = "7"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
 
 LANG = "pt"
 FALTANDO = set()
@@ -90,9 +90,33 @@ NAV = [
     ("historia", "História", "historia.html", True),
     ("fazendas", "Fazendas", "fazendas.html", True),
     ("qualidade", "Qualidade", "qualidade.html", True),
+    ("certificacoes", "Certificações", "certificacoes.html", True),
     ("fotos", "Fotos e vídeos", "fotos.html", True),
-    ("links", "Links úteis", "links-uteis.html", True),
     ("contato", "Contato", "contato.html", False),
+]
+
+# Certificações e programas: (logo, nome, quem emite, o que é, pilares, site oficial)
+CERTS = [
+    ("logo-rainforest", "Rainforest Alliance", "Rainforest Alliance",
+     "Selo internacional de agricultura sustentável. Auditorias independentes verificam, fazenda por fazenda, o cuidado com a floresta, a água, o solo e as pessoas que trabalham no campo.",
+     ["Proteção da biodiversidade e da mata nativa", "Uso responsável de água, solo e defensivos", "Direitos e bem-estar dos trabalhadores"],
+     "https://www.rainforest-alliance.org/pt-br/"),
+    ("logo-AAA", "Nespresso AAA", "Programa AAA de Qualidade Sustentável da Nespresso",
+     "Programa da Nespresso que une qualidade de xícara e sustentabilidade. Só entram fazendas que entregam cafés de alto padrão e seguem práticas responsáveis acompanhadas por técnicos de campo.",
+     ["Qualidade de xícara de alto padrão", "Boas práticas agrícolas acompanhadas no campo", "Relação de longo prazo com o produtor"],
+     "https://www.sustainability.nespresso.com/"),
+    ("logo-CAFE", "C.A.F.E. Practices", "Starbucks · Coffee and Farmer Equity",
+     "Diretrizes de compra ética da Starbucks, verificadas por organizações independentes. Avaliam qualidade, transparência econômica, responsabilidade social e liderança ambiental.",
+     ["Qualidade do produto", "Responsabilidade social e econômica", "Liderança ambiental"],
+     "https://www.starbucks.com/responsibility/sourcing/coffee/"),
+    ("logo-UTZ", "UTZ Certified", "Hoje parte da Rainforest Alliance",
+     "Programa de café sustentável que as fazendas do grupo seguiram por anos. Em 2018 a UTZ se uniu à Rainforest Alliance, e seus critérios continuam valendo dentro do selo atual.",
+     ["Boas práticas agrícolas e de gestão", "Rastreabilidade do lote", "Condições de trabalho seguras"],
+     "https://www.rainforest-alliance.org/pt-br/"),
+    ("logo-cerrado", "Região do Cerrado Mineiro", "Federação dos Cafeicultores do Cerrado",
+     "Primeira Denominação de Origem de café do Brasil. O selo garante que o café foi produzido na região, por produtores cadastrados, com origem e qualidade comprovadas lote a lote.",
+     ["Origem geográfica protegida", "Produtor e lote identificados", "Qualidade avaliada para usar o selo"],
+     "https://www.cerradomineiro.org"),
 ]
 
 # Fichas técnicas dos núcleos (fonte: site institucional antigo)
@@ -198,29 +222,6 @@ VIDEOS = [
     ("35SHwzzTxpY", "Terreiro e lavoura", "0:18", "Drone"),
     ("biK3VjIsVsQ", "Secagem em terreiro", "0:22", "Drone"),
 ]
-
-LINKS = [
-    ("regiao", "Região do Cerrado Mineiro", "Federação dos Cafeicultores do Cerrado e a Denominação de Origem.", "https://www.cerradomineiro.org"),
-    ("regiao", "Expocaccer", "Cooperativa dos cafeicultores do Cerrado, em Patrocínio.", "https://www.expocaccer.com.br"),
-    ("regiao", "CCCMG", "Centro do Comércio de Café do Estado de Minas Gerais.", "https://www.cccmg.com.br"),
-    ("regiao", "Prefeitura de Patrocínio", "Serviços e notícias do município.", "https://www.patrocinio.mg.gov.br"),
-    ("cert", "Rainforest Alliance", "Certificação de sustentabilidade presente em todas as fazendas.", "https://www.rainforest-alliance.org/pt-br/"),
-    ("cert", "C.A.F.E. Practices", "Programa de compra ética e sustentável da Starbucks.", "https://www.starbucks.com/responsibility/sourcing/coffee/"),
-    ("cert", "BSCA", "Associação Brasileira de Cafés Especiais.", "https://bsca.com.br"),
-    ("cert", "SCA", "Specialty Coffee Association e o protocolo de prova.", "https://www.sca.coffee"),
-    ("mercado", "Indicador do café · CEPEA", "Preço de referência do café arábica, atualizado diariamente.", "https://www.cepea.esalq.usp.br/br/indicador/cafe.aspx"),
-    ("mercado", "Cotações do café · Notícias Agrícolas", "Bolsa de Nova York, BM&F e praças do Cerrado.", "https://www.noticiasagricolas.com.br/cotacoes/cafe"),
-    ("mercado", "Cecafé", "Conselho dos Exportadores de Café do Brasil.", "https://www.cecafe.com.br"),
-    ("mercado", "ICO", "Organização Internacional do Café.", "https://www.ico.org"),
-    ("mercado", "ABIC", "Associação Brasileira da Indústria de Café.", "https://www.abic.com.br"),
-    ("clima", "INMET", "Previsão, alertas e dados das estações meteorológicas.", "https://portal.inmet.gov.br"),
-    ("pesquisa", "Fundação Procafé", "Pesquisa e recomendações técnicas para a cafeicultura.", "https://www.fundacaoprocafe.com.br"),
-    ("pesquisa", "EPAMIG", "Empresa de Pesquisa Agropecuária de Minas Gerais.", "https://www.epamig.br"),
-    ("pesquisa", "EMATER-MG", "Assistência técnica e extensão rural em Minas.", "https://www.emater.mg.gov.br"),
-    ("pesquisa", "Ministério da Agricultura", "Normas, registros e programas do MAPA.", "https://www.gov.br/agricultura"),
-]
-LINK_CATS = [("todos", "Todos"), ("regiao", "Região"), ("cert", "Certificações"), ("mercado", "Mercado"),
-             ("clima", "Clima"), ("pesquisa", "Pesquisa e governo")]
 
 _S = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'
 ICONS = {
@@ -449,16 +450,23 @@ def videos():
         for n, (i, tt, d, k) in enumerate(VIDEOS)) + "</div>"
 
 
-def links_block():
-    chips = "".join(f'<button class="filter" type="button" data-f="{c}" aria-pressed="{"true" if c == "todos" else "false"}">{t(l)}</button>' for c, l in LINK_CATS)
-    nomes = {c: t(l) for c, l in LINK_CATS}
-    cards = "".join(
-        f'<a class="link-card" data-cat="{c}" href="{u}" target="_blank" rel="noopener"><span class="label accent">{nomes[c]}</span><strong>{t(tt)}</strong><p>{t(d)}</p><span class="link-go">{u.split("//")[1].split("/")[0].replace("www.", "")} {ICONS["out"]}</span></a>'
-        for c, tt, d, u in LINKS)
-    return f"""<label class="search">{ICONS['search']}<input type="search" placeholder="{t('Buscar um link')}" data-busca aria-label="{t('Buscar links')}"></label>
-    <div class="filters" role="group" aria-label="{t('Filtrar links')}">{chips}</div>
-    <div class="links" data-links>{cards}</div>
-    <p class="links-vazio muted" data-vazio hidden>{t('Nenhum link encontrado.')}</p>"""
+def certs():
+    """Cartões completos das certificações (página Certificações)."""
+    out = []
+    for k, (logo, nome, emissor, desc, pilares, url) in enumerate(CERTS):
+        lis = "".join(f"<li>{ICONS['shield']}<span>{t(x)}</span></li>" for x in pilares)
+        host = url.split("//")[1].split("/")[0].replace("www.", "")
+        out.append(f"""<article class="cert reveal" id="{logo.replace('logo-', '').lower()}">
+        <div class="cert-logo"><img src="assets/selos/{logo}.png" alt="{t(nome)}" loading="lazy"><span class="label muted">{k + 1:02d} / {len(CERTS):02d}</span></div>
+        <div class="cert-body">
+          <span class="label accent">{t(emissor)}</span>
+          <h2 class="display">{t(nome)}</h2>
+          <p>{t(desc)}</p>
+          <ul class="cert-pil">{lis}</ul>
+          <div class="cert-foot"><span class="cert-scope">{t('Nos 6 núcleos')}</span><a href="{url}" target="_blank" rel="noopener">{host} {ICONS['out']}</a></div>
+        </div>
+      </article>""")
+    return '<div class="certs">\n      ' + "\n      ".join(out) + "\n    </div>"
 
 
 def canais():
@@ -572,7 +580,7 @@ def footer():
         <li><a class="foot-route" href="{route_link()}" target="_blank" rel="noopener">{ICONS['route']} {t('Como chegar')}</a></li>
       </ul></div>
       <div><h4>{t('Certificações')}</h4><ul class="creds">
-        <li>Rainforest Alliance</li><li>Nespresso AAA</li><li>C.A.F.E. Practices</li><li>{t('Região do Cerrado Mineiro')}</li>
+        <li><a href="certificacoes.html#rainforest">Rainforest Alliance</a></li><li><a href="certificacoes.html#aaa">Nespresso AAA</a></li><li><a href="certificacoes.html#cafe">C.A.F.E. Practices</a></li><li><a href="certificacoes.html#cerrado">{t('Região do Cerrado Mineiro')}</a></li>
       </ul></div>
     </div>
   </div>
@@ -656,7 +664,7 @@ def render(body):
     rep = {
         "{{ARROW}}": lambda: ARROW, "{{NUCLEOS_LISTA}}": nucleos_lista, "{{NUCLEOS_FICHAS}}": nucleos_fichas,
         "{{NUCLEOS_NAV}}": nucleos_nav, "{{ALTITUDES}}": altitudes, "{{PREMIOS}}": premios,
-        "{{SELOS}}": selos, "{{GALERIA}}": galeria, "{{VIDEOS}}": videos, "{{CINE}}": cine, "{{LINKS}}": links_block,
+        "{{SELOS}}": selos, "{{GALERIA}}": galeria, "{{VIDEOS}}": videos, "{{CINE}}": cine, "{{CERTS}}": certs,
         "{{CANAIS}}": canais, "{{MAPA}}": mapa, "{{EMAIL}}": lambda: EMPRESA["email"], "{{TEL}}": lambda: EMPRESA["tel"],
         "{{TELEFONE}}": telefone, "{{INSTAGRAM}}": lambda: EMPRESA["instagram"], "{{YOUTUBE}}": lambda: EMPRESA["youtube"],
         "{{ROTA}}": route_link,

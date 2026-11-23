@@ -159,4 +159,35 @@ EN = {
     "Armazenagem e preparo": "Storage and milling", "Para outros produtores": "For other growers",
     "Compradores": "Buyers", "Lotes rastreáveis": "Traceable lots", "Mapa": "Map", "Escritório": "Office",
     "Abrir no Google Maps": "Open in Google Maps",
+
+    # certificações
+    "Certificações": "Certifications", "Nos 6 núcleos": "On all 6 estates",
+    "Programa AAA de Qualidade Sustentável da Nespresso": "Nespresso AAA Sustainable Quality Program",
+    "Starbucks · Coffee and Farmer Equity": "Starbucks · Coffee and Farmer Equity",
+    "Federação dos Cafeicultores do Cerrado": "Cerrado Coffee Growers Federation",
+    "Selo internacional de agricultura sustentável. Auditorias independentes verificam, fazenda por fazenda, o cuidado com a floresta, a água, o solo e as pessoas que trabalham no campo.":
+        "International seal for sustainable agriculture. Independent audits check, farm by farm, how forests, water, soil and the people working the land are cared for.",
+    "Proteção da biodiversidade e da mata nativa": "Protection of biodiversity and native forest",
+    "Uso responsável de água, solo e defensivos": "Responsible use of water, soil and crop protection",
+    "Direitos e bem-estar dos trabalhadores": "Workers' rights and well-being",
+    "Programa da Nespresso que une qualidade de xícara e sustentabilidade. Só entram fazendas que entregam cafés de alto padrão e seguem práticas responsáveis acompanhadas por técnicos de campo.":
+        "Nespresso's program combining cup quality and sustainability. Only farms that deliver top-grade coffee and follow responsible practices, monitored by field agronomists, take part.",
+    "Qualidade de xícara de alto padrão": "Top-grade cup quality",
+    "Boas práticas agrícolas acompanhadas no campo": "Good agricultural practices monitored in the field",
+    "Relação de longo prazo com o produtor": "Long-term relationship with the grower",
+    "Diretrizes de compra ética da Starbucks, verificadas por organizações independentes. Avaliam qualidade, transparência econômica, responsabilidade social e liderança ambiental.":
+        "Starbucks' ethical sourcing guidelines, verified by independent organizations. They assess quality, economic transparency, social responsibility and environmental leadership.",
+    "Qualidade do produto": "Product quality",
+    "Responsabilidade social e econômica": "Social and economic responsibility",
+    "Liderança ambiental": "Environmental leadership",
+    "Programa de café sustentável que as fazendas do grupo seguiram por anos. Em 2018 a UTZ se uniu à Rainforest Alliance, e seus critérios continuam valendo dentro do selo atual.":
+        "A sustainable coffee program the group's farms followed for years. In 2018 UTZ merged with Rainforest Alliance, and its criteria live on within the current seal.",
+    "Boas práticas agrícolas e de gestão": "Good farming and management practices",
+    "Rastreabilidade do lote": "Lot traceability",
+    "Condições de trabalho seguras": "Safe working conditions",
+    "Primeira Denominação de Origem de café do Brasil. O selo garante que o café foi produzido na região, por produtores cadastrados, com origem e qualidade comprovadas lote a lote.":
+        "Brazil's first Designation of Origin for coffee. The seal guarantees the coffee was grown in the region, by registered growers, with origin and quality proven lot by lot.",
+    "Origem geográfica protegida": "Protected geographic origin",
+    "Produtor e lote identificados": "Grower and lot identified",
+    "Qualidade avaliada para usar o selo": "Quality assessed before the seal is granted",
 }

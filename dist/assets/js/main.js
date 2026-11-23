@@ -111,6 +111,29 @@
     });
   }
 
+  /* ---------- Títulos grandes sempre cabem na largura ----------
+     Se a linha mais longa passar do espaço, a fonte encolhe na medida certa. */
+  var fitEls = $$(".hero-title, .page-hero h1.mega");
+  function fitTitles() {
+    fitEls.forEach(function (el) {
+      el.style.fontSize = "";
+      var lines = $$(".line", el);
+      if (!lines.length) return;
+      for (var volta = 0; volta < 5; volta++) {
+        var falta = 1;
+        lines.forEach(function (l) { if (l.scrollWidth > l.clientWidth + 1) falta = Math.min(falta, l.clientWidth / l.scrollWidth); });
+        if (falta >= 1) break;
+        el.style.fontSize = (parseFloat(getComputedStyle(el).fontSize) * falta * .97).toFixed(1) + "px";
+      }
+    });
+  }
+  fitTitles();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", fitTitles);
+  window.addEventListener("load", fitTitles);
+  var fitT = 0;
+  window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitTitles, 120); });
+
   /* ---------- Ciclo da safra: galho de café do Chapadão ---------- */
   var ciclo = $("[data-ciclo]");
   if (ciclo) (function () {
