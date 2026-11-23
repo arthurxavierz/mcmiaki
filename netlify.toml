@@ -28,3 +28,13 @@
   from = "/en/links-uteis.html"
   to = "/en/certificacoes.html"
   status = 301
+
+[[redirects]]
+  from = "/links-uteis"
+  to = "/certificacoes.html"
+  status = 301
+
+[[redirects]]
+  from = "/en/links-uteis"
+  to = "/en/certificacoes.html"
+  status = 301
