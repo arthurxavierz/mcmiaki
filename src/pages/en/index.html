@@ -1,13 +1,22 @@
-<!--meta {"title": "MC Miaki Coffee · Specialty coffee from the Chapadão de Ferro, Patrocínio, Brazil", "description": "Specialty, sustainable and 100% traceable coffees from a unique volcanic terroir: the Chapadão de Ferro, at 1,250 meters, in Patrocínio, Cerrado Mineiro, Brazil. Three generations of the Miaki family.", "nav": "index", "theme": "dark"} -->
+<!--meta {"title": "MC Miaki Coffee · Specialty coffee from the Chapadão de Ferro, Patrocínio, Brazil", "description": "Specialty, sustainable and 100% traceable coffees from a unique volcanic terroir: the Chapadão de Ferro, at 1,250 meters, in Patrocínio, Cerrado Mineiro, Brazil. Three generations of the Miaki family.", "nav": "index", "theme": "dark", "head": "<script>try{if(!sessionStorage.getItem('mcm-intro')){document.documentElement.classList.add('intro');sessionStorage.setItem('mcm-intro','1')}}catch(e){}</script>\n<link rel=\"preload\" as=\"image\" href=\"assets/video/hero.jpg\">\n"} -->
 
 <section class="hero" aria-labelledby="hero-title">
+  <div class="hero-media" aria-hidden="true">
+    <video muted loop playsinline autoplay preload="auto" poster="assets/video/hero.jpg" data-desktop="assets/video/hero.mp4" data-mobile="assets/video/hero-m.mp4"></video>
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-grain" aria-hidden="true"></div>
   <div class="wrap">
+    <div class="hero-top label">
+      <span>Patrocínio · Cerrado Mineiro · Brazil</span>
+      <span>Chapadão de Ferro · 1,250 m</span>
+    </div>
+
     <div class="hero-main">
-      <p class="hero-origin label">Patrocínio, Brazil · Cerrado Mineiro</p>
-      <h1 class="hero-title" id="hero-title">
+      <h1 class="display hero-title" id="hero-title">
         <span class="line"><span>Specialty coffee</span></span>
         <span class="line"><span>on every</span></span>
-        <span class="line"><em>hectare</em></span>
+        <span class="line"><span class="fill">hectare</span></span>
       </h1>
       <div class="hero-lead">
         <p>For three generations the Miaki family has grown coffee in Brazil's Cerrado Mineiro. 2,665 hectares in Patrocínio, most of them on the Chapadão de Ferro, up to 1,250 meters high.</p>
@@ -18,43 +27,14 @@
       </div>
     </div>
 
-    <div class="field-reel" role="region" aria-label="Field journal" data-field-reel>
-      <div class="field-top label">
-        <span>Field journal</span>
-        <span>Chapadão de Ferro · 1,250 m</span>
+    <div class="hero-muda" aria-hidden="true" data-muda='[{"n": "Seed", "t": "The bean goes into the soil still in its parchment. With water and warmth, it slowly wakes up."}, {"n": "Matchstick", "t": "The root goes down first. The stem rises in an arch, pulling the bean out of the soil."}, {"n": "Little soldier", "t": "The stem straightens and lifts the bean on its tip, standing tall like a little soldier."}, {"n": "Butterfly", "t": "The parchment drops and the first two leaves open, broad and rounded."}, {"n": "Seedling", "t": "The first pairs of true leaves arrive. In about six months, the seedling goes to the field."}]'>
+      <svg class="muda-svg" viewBox="0 0 320 400" data-muda-svg></svg>
+      <div class="muda-info">
+        <div class="muda-head"><span class="label">From bean to seedling</span><span class="label muda-n" data-muda-n>01 / 05</span></div>
+        <strong class="muda-fase" data-muda-fase>Seed</strong>
+        <p class="muda-txt" data-muda-txt>The bean goes into the soil still in its parchment. With water and warmth, it slowly wakes up.</p>
+        <div class="muda-bar" data-muda-bar><i></i><i></i><i></i><i></i><i></i></div>
       </div>
-      <div class="field-viewport">
-        <figure class="field-scene is-active">
-          <img src="assets/img/campo-chapadao.webp" alt="Curving rows of coffee trees seen from above at Chapadão de Ferro" decoding="async" fetchpriority="high">
-          <figcaption class="field-caption">
-            <span class="label">The land</span>
-            <strong>Chapadão de Ferro</strong>
-          </figcaption>
-        </figure>
-        <figure class="field-scene" aria-hidden="true">
-          <img src="assets/img/campo-florada.webp" alt="White blossoms on the branches of a coffee tree" decoding="async">
-          <figcaption class="field-caption">
-            <span class="label">The blossom</span>
-            <strong>The start of the crop</strong>
-          </figcaption>
-        </figure>
-        <figure class="field-scene" aria-hidden="true">
-          <img src="assets/img/campo-colheita.webp" alt="A farm worker winnowing coffee cherries in the field" decoding="async">
-          <figcaption class="field-caption">
-            <span class="label">The harvest</span>
-            <strong>Cherries at their peak</strong>
-          </figcaption>
-        </figure>
-      </div>
-      <div class="field-controls" hidden>
-        <div class="field-track" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
-        <div class="field-buttons">
-          <button class="field-prev" type="button" aria-label="Previous scene">{{ARROW}}</button>
-          <button class="field-toggle" type="button" aria-label="Pause sequence" data-pause="Pause sequence" data-play="Play sequence"><span aria-hidden="true"></span></button>
-          <button class="field-next" type="button" aria-label="Next scene">{{ARROW}}</button>
-        </div>
-      </div>
-      <p class="sr-only" data-field-status role="status"></p>
     </div>
 
     <div class="hero-bottom">
@@ -63,7 +43,7 @@
         <a href="{{INSTAGRAM}}" target="_blank" rel="noopener">{{ICON:instagram}} @mcmiaki</a>
         <a href="contato.html#mapa">{{ICON:pin}} Directions</a>
       </div>
-      <a class="scroll-cue label" href="#quem-somos">Explore the farm {{ARROW}}</a>
+      <span class="scroll-cue label"><i></i>Scroll</span>
     </div>
   </div>
 </section>
@@ -75,12 +55,12 @@
   </div>
 </div>
 
-<section class="section manifesto" id="quem-somos" aria-label="Who we are">
+<section class="section manifesto" aria-label="Who we are">
   <div class="wrap">
     <div class="sec-head">
       <span class="label"><b>01</b> / Who we are</span>
       <div>
-        <p class="big">A family in love with coffee, working wisely with nature to grow <em>fantastic lots, sustainably.</em> True gems.</p>
+        <p class="big" data-words>A family in love with coffee, working wisely with nature to grow <em>fantastic lots, sustainably.</em> True gems.</p>
       </div>
     </div>
 

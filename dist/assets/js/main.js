@@ -2,17 +2,29 @@
 (function () {
   "use strict";
   var doc = document.documentElement;
-  var motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var reduce = motion.matches;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var EN = /^en/i.test(doc.lang);
   var fmt = function (n) { return Math.round(n).toLocaleString(EN ? "en-US" : "pt-BR"); };
   var hasIO = "IntersectionObserver" in window;
 
+  /* ---------- Cortina: altímetro sobe até 1.250 m ---------- */
+  var alt = $("[data-alt]");
+  if (alt && doc.classList.contains("intro")) {
+    var t0 = null;
+    var stepAlt = function (t) {
+      if (!t0) t0 = t;
+      var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
+      alt.textContent = String(Math.round(e * 1250)).padStart(4, "0");
+      if (p < 1) requestAnimationFrame(stepAlt);
+    };
+    requestAnimationFrame(stepAlt);
+  }
+
   /* ---------- Cabeçalho, progresso e paralaxe ---------- */
   var header = $(".site-header"), bar = $(".progress-bar"), last = 0;
-  var heroMedia = $(".page-hero .ph-media video, .page-hero .ph-media img");
+  var heroMedia = $(".hero-media video, .page-hero .ph-media video, .page-hero .ph-media img");
   var paras = $$("[data-parallax], .banner-media img");
   function onScroll() {
     var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
@@ -53,11 +65,12 @@
     $$("a", overlay).forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
   }
 
-  /* ---------- Vídeos das páginas internas ---------- */
+  /* ---------- Vídeo do hero: versão certa para a tela ---------- */
   $$("video[data-desktop]").forEach(function (v) {
+    var src = window.innerWidth < 760 && v.getAttribute("data-mobile") ? v.getAttribute("data-mobile") : v.getAttribute("data-desktop");
     var save = navigator.connection && navigator.connection.saveData;
     if (reduce || save) return;
-    v.src = v.getAttribute("data-desktop");
+    v.src = src;
     var p = v.play(); if (p && p.catch) p.catch(function () {});
   });
   /* vídeos que só carregam perto da tela e pausam quando saem dela */
@@ -75,9 +88,32 @@
     });
   }
 
+  /* ---------- Título do hero letra a letra ---------- */
+  var title = $(".hero-title");
+  if (title) {
+    var i = 0;
+    $$(".line", title).forEach(function (line) {
+      var walk = function (node) {
+        Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+          if (n.nodeType === 3) {
+            var frag = document.createDocumentFragment();
+            Array.from(n.textContent.normalize("NFC")).forEach(function (c) {
+              var s = document.createElement("span");
+              s.className = "ch"; s.style.setProperty("--i", i++);
+              s.textContent = c === " " ? " " : c;
+              frag.appendChild(s);
+            });
+            n.parentNode.replaceChild(frag, n);
+          } else if (n.nodeType === 1) walk(n);
+        });
+      };
+      walk(line);
+    });
+  }
+
   /* ---------- Títulos grandes sempre cabem na largura ----------
      Se a linha mais longa passar do espaço, a fonte encolhe na medida certa. */
-  var fitEls = $$(".page-hero h1.mega");
+  var fitEls = $$(".hero-title, .page-hero h1.mega");
   function fitTitles() {
     fitEls.forEach(function (el) {
       el.style.fontSize = "";
@@ -98,85 +134,200 @@
   var fitT = 0;
   window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitTitles, 120); });
 
-  /* ---------- Caderno de campo ---------- */
-  var reel = $("[data-field-reel]");
-  if (reel) {
-    var scenes = $$(".field-scene", reel);
-    var markers = $$(".field-track span", reel);
-    var reelToggle = $(".field-toggle", reel);
-    var reelStatus = $("[data-field-status]", reel);
-    var currentScene = 0;
-    var previousScene = null;
-    var reelTimer;
-    var reelVisible = !hasIO;
-    var reelHovered = false;
-    var reelPlaying = !reduce && !(navigator.connection && navigator.connection.saveData);
+  /* ---------- Do grão à muda: um cafezinho nascendo no hero ----------
+     Corte de terra roxa com as fases reais da muda de café:
+     semente, palito de fósforo, soldadinho, orelha de onça e muda. */
+  var muda = $("[data-muda]");
+  if (muda) (function () {
+    var fases = JSON.parse(muda.getAttribute("data-muda"));
+    var svg = $("[data-muda-svg]", muda), NS = "http://www.w3.org/2000/svg";
+    var mk = function (tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; };
+    var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+    var sm = function (a, b, x) { var p = clamp((x - a) / (b - a)); return p * p * (3 - 2 * p); };
+    var lerp = function (a, b, p) { return a + (b - a) * p; };
+    var seed = 5, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    var grad = function (id, stops, x2, y2) {
+      var g = mk("linearGradient", { id: id, x1: "0", y1: "0", x2: x2 || "0", y2: y2 || "1" }, defs);
+      stops.forEach(function (s) { mk("stop", { offset: s[0], "stop-color": s[1] }, g); });
+    };
 
-    function queueScene() {
-      clearTimeout(reelTimer);
-      if (!reelPlaying || !reelVisible || reelHovered || document.hidden) return;
-      reelTimer = setTimeout(function () { selectScene(1, false); }, 6800);
-    }
+    var defs = mk("defs", {}, svg);
+    grad("m-solo", [["0", "#8a3d24"], [".35", "#5c2516"], ["1", "#2a110a"]]);
+    grad("m-folha", [["0", "#3f8f4a"], ["1", "#1e5a2e"]], "1", "1");
+    grad("m-orelha", [["0", "#7cb35a"], ["1", "#3f8238"]], "1", "1");
+    grad("m-grao", [["0", "#e3cc9a"], ["1", "#b48d55"]], "1", "1");
+    var rg = mk("radialGradient", { id: "m-sol", cx: ".5", cy: ".5", r: ".5" }, defs);
+    mk("stop", { offset: "0", "stop-color": "rgba(255,226,160,.55)" }, rg); mk("stop", { offset: "1", "stop-color": "rgba(255,226,160,0)" }, rg);
+    var cp = mk("clipPath", { id: "m-clip" }, defs); mk("rect", { width: "320", height: "400", rx: "14" }, cp);
 
-    function updateReelPlayback() {
-      reel.classList.toggle("is-playing", reelPlaying);
-      reelToggle.setAttribute("aria-label", reelPlaying ? reelToggle.dataset.pause : reelToggle.dataset.play);
-      reelToggle.hidden = motion.matches;
-      queueScene();
-    }
+    var cena = mk("g", { "clip-path": "url(#m-clip)" }, svg);
+    var sol = mk("circle", { cx: "262", cy: "58", r: "120", fill: "url(#m-sol)" }, cena);
+    var SUP = "M0 262 C 60 256, 110 266, 160 261 S 260 256, 320 262";
+    mk("path", { d: SUP + " L320 400 L0 400Z", fill: "url(#m-solo)" }, cena);
+    var cores = ["#a2533a", "#6e2c1a", "#c27a52", "#3a170d", "#8f4a2e"];
+    for (var i = 0; i < 90; i++) mk("circle", { cx: (rnd() * 320).toFixed(1), cy: (268 + rnd() * 130).toFixed(1), r: (.6 + rnd() * 1.8).toFixed(1), fill: cores[i % 5], opacity: (.5 + rnd() * .5).toFixed(2) }, cena);
+    for (var j = 0; j < 4; j++) mk("ellipse", { cx: (30 + rnd() * 260).toFixed(0), cy: (300 + rnd() * 80).toFixed(0), rx: (5 + rnd() * 6).toFixed(1), ry: (3 + rnd() * 3).toFixed(1), fill: "#9a6a48", opacity: ".55" }, cena);
+    var umido = mk("ellipse", { cx: "160", cy: "290", rx: "70", ry: "34", fill: "#1a0a05", opacity: "0" }, cena);
+    mk("path", { d: SUP, fill: "none", stroke: "rgba(255,220,190,.18)", "stroke-width": "1.2" }, cena);
 
-    function selectScene(direction, manual) {
-      var outgoing = scenes[currentScene];
-      if (previousScene) previousScene.classList.remove("is-previous");
-      outgoing.classList.replace("is-active", "is-previous");
-      outgoing.setAttribute("aria-hidden", "true");
-      markers[currentScene].classList.remove("is-current");
-      previousScene = outgoing;
-      currentScene = (currentScene + direction + scenes.length) % scenes.length;
-      var incoming = scenes[currentScene];
-      incoming.classList.add("is-active");
-      incoming.removeAttribute("aria-hidden");
-      markers[currentScene].classList.add("is-current");
+    /* raízes */
+    var gRaiz = mk("g", { fill: "none", stroke: "#e9d7b8", "stroke-linecap": "round" }, cena);
+    var raiz = mk("path", { d: "M160 290 C 158 312, 165 336, 159 360 S 156 384, 158 398", "stroke-width": "2.4", pathLength: "1", "stroke-dasharray": "1", "stroke-dashoffset": "1" }, gRaiz);
+    var lat = [["M159 312 C 150 318, 140 320, 128 330", 4.2], ["M161 326 C 172 332, 184 334, 194 346", 4.8], ["M159 346 C 148 352, 140 360, 134 372", 5.6], ["M160 362 C 170 368, 176 378, 182 390", 6.2]].map(function (l) {
+      return { el: mk("path", { d: l[0], "stroke-width": "1.2", pathLength: "1", "stroke-dasharray": "1", "stroke-dashoffset": "1", opacity: ".85" }, gRaiz), t: l[1] };
+    });
 
-      if (manual) {
-        reelPlaying = false;
-        reelStatus.textContent = $(".field-caption strong", incoming).textContent;
+    /* planta: caule, orelhas de onça, folhas, grão */
+    var planta = mk("g", {}, cena);
+    var caule = mk("path", { fill: "none", "stroke-width": "4.2", "stroke-linecap": "round" }, planta);
+    var folhaD = function (L, w) { return "M0 0 C " + L * .25 + " " + -w + ", " + L * .7 + " " + -w * .9 + ", " + L + " 0 C " + L * .7 + " " + w * .9 + ", " + L * .25 + " " + w + ", 0 0Z"; };
+    var ORELHA = "M0 0 C 4 -15, 30 -22, 42 -9 C 49 -1, 40 13, 22 12 C 11 11, 3 6, 0 0Z";
+    var orelhas = [-1, 1].map(function (lado) {
+      var g = mk("g", {}, planta), inner = mk("g", {}, g);
+      mk("path", { d: ORELHA, fill: "url(#m-orelha)" }, inner);
+      mk("path", { d: "M2 0 Q 20 -4 38 -6", stroke: "rgba(230,245,210,.35)", "stroke-width": "1", fill: "none" }, inner);
+      return { g: g, inner: inner, lado: lado };
+    });
+    var folhas = [[-1, 60, 15], [1, 60, 15], [-1, 30, 8], [1, 30, 8]].map(function (f) {
+      var g = mk("g", {}, planta), inner = mk("g", {}, g);
+      mk("path", { d: folhaD(f[1], f[2]), fill: "url(#m-folha)" }, inner);
+      mk("path", { d: "M3 0 Q " + f[1] * .5 + " -1.5 " + (f[1] - 4) + " 0", stroke: "rgba(220,240,210,.3)", "stroke-width": "1", fill: "none" }, inner);
+      return { g: g, inner: inner, lado: f[0], L: f[1] };
+    });
+    var grao = mk("g", {}, planta);
+    var graoIn = mk("g", {}, grao);
+    mk("ellipse", { rx: "11", ry: "8", fill: "url(#m-grao)" }, graoIn);
+    mk("path", { d: "M-8 0 C -3 -2, 3 2, 8 0", stroke: "#8a6634", "stroke-width": "1.3", fill: "none", "stroke-linecap": "round" }, graoIn);
+
+    /* gotas de água */
+    var gotas = [0, 1, 2].map(function (k) {
+      return { el: mk("path", { d: "M0 -7 C 3 -2, 5 1, 5 3 A 5 5 0 0 1 -5 3 C -5 1, -3 -2, 0 -7Z", fill: "#bfe3f2", opacity: "0" }, cena), x: 132 + k * 26, t: .15 + k * .5 };
+    });
+
+    /* formas do caule: base no colo da raiz, ponta segura o grão */
+    var B = [160, 290];
+    var ARCO = [[160, 246], [190, 236], [188, 264]];
+    var RETO = [[160, 262], [160, 232], [160, 204]];
+    var ALTO = [[160, 240], [160, 180], [160, 126]];
+
+    var info = { n: $("[data-muda-n]", muda), f: $("[data-muda-fase]", muda), t: $("[data-muda-txt]", muda), bar: $$("[data-muda-bar] i", muda) };
+    var faseAt = 0;
+    var CORTES = [0, 2.6, 5.4, 8.0, 11.0], FIM = 15.2, CICLO = 16.4;
+    var setInfo = function (t) {
+      var k = 0; CORTES.forEach(function (c, i) { if (t >= c) k = i; });
+      info.bar.forEach(function (b, i) {
+        var p = i < k ? 1 : i > k ? 0 : clamp((t - CORTES[k]) / ((CORTES[k + 1] || FIM) - CORTES[k]));
+        b.style.setProperty("--p", p.toFixed(3));
+      });
+      if (k !== faseAt) {
+        faseAt = k; muda.classList.add("troca");
+        setTimeout(function () { info.f.textContent = fases[k].n; info.t.textContent = fases[k].t; info.n.textContent = "0" + (k + 1) + " / 05"; muda.classList.remove("troca"); }, 260);
       }
-      updateReelPlayback();
-    }
+    };
 
-    $(".field-prev", reel).addEventListener("click", function () { selectScene(-1, true); });
-    $(".field-next", reel).addEventListener("click", function () { selectScene(1, true); });
-    reelToggle.addEventListener("click", function () {
-      reelPlaying = !reelPlaying;
-      updateReelPlayback();
+    var draw = function (t, now) {
+      /* água e solo úmido */
+      gotas.forEach(function (g) {
+        var q = clamp((t - g.t) / .7), y = lerp(24, 258, q * q);
+        g.el.setAttribute("transform", "translate(" + g.x + " " + y.toFixed(1) + ")");
+        g.el.setAttribute("opacity", (q > 0 && q < 1 ? .9 : 0).toString());
+      });
+      var some = sm(FIM - 1, FIM, t);
+      umido.setAttribute("opacity", (sm(.6, 2.2, t) * .45 * (1 - some)).toFixed(3));
+
+      /* raízes */
+      raiz.setAttribute("stroke-dashoffset", (1 - sm(1.3, 5.2, t)).toFixed(3));
+      lat.forEach(function (l) { l.el.setAttribute("stroke-dashoffset", (1 - sm(l.t, l.t + 1.6, t)).toFixed(3)); });
+      gRaiz.setAttribute("opacity", (1 - some).toFixed(3));
+
+      /* caule: nasce, faz o arco, endireita e cresce */
+      var a = sm(2.6, 4.6, t), r = sm(5.4, 7.2, t), h = sm(11.0, 13.4, t);
+      var pts = [0, 1, 2].map(function (i) {
+        var ax = lerp(B[0], ARCO[i][0], a), ay = lerp(B[1], ARCO[i][1], a);
+        var rx = lerp(ax, RETO[i][0], r), ry = lerp(ay, RETO[i][1], r);
+        return [lerp(rx, ALTO[i][0], h), lerp(ry, ALTO[i][1], h)];
+      });
+      caule.setAttribute("d", "M" + B[0] + " " + B[1] + " C " + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(", "));
+      caule.setAttribute("stroke", a < .02 ? "transparent" : (r > .5 ? "#5e9a45" : "#a9c97a"));
+      caule.setAttribute("stroke-width", (3 + r * 1.2 + h * .8).toFixed(2));
+      var ponta = pts[2];
+
+      /* grão: incha, sobe na ponta e cai quando a orelha de onça abre */
+      var incha = 1 + .14 * sm(.8, 2.2, t);
+      var cai = sm(8.0, 9.2, t);
+      var gx = a > 0 ? ponta[0] : 160, gy = a > 0 ? ponta[1] : 290;
+      var ang = lerp(90, 0, r) * (a > 0 ? 1 : 0);
+      grao.setAttribute("transform", "translate(" + (gx + cai * 26).toFixed(1) + " " + (gy - 6 * (1 - cai) * r + cai * cai * 70).toFixed(1) + ") rotate(" + (ang + cai * 130).toFixed(1) + ")");
+      graoIn.setAttribute("transform", "scale(" + incha.toFixed(3) + ")");
+      grao.setAttribute("opacity", (1 - sm(8.6, 9.4, t)).toFixed(3));
+
+      /* orelhas de onça: abrem na ponta do soldadinho e ficam no nó */
+      var abre = sm(8.0, 9.6, t), noY = lerp(RETO[2][1], 206, h);
+      orelhas.forEach(function (o) {
+        var rot = lerp(-80, -8, abre);
+        o.g.setAttribute("transform", "translate(160 " + noY.toFixed(1) + ") scale(" + o.lado + " 1) rotate(" + rot.toFixed(1) + ")");
+        o.inner.setAttribute("transform", "scale(" + (abre * (1 + h * .15)).toFixed(3) + ")");
+      });
+
+      /* primeiras folhas verdadeiras no alto */
+      folhas.forEach(function (f, i) {
+        var ini = i < 2 ? 11.4 : 12.6, s = sm(ini, ini + 1.6, t);
+        var y = i < 2 ? ponta[1] + 14 : ponta[1] + 2;
+        f.g.setAttribute("transform", "translate(160 " + y.toFixed(1) + ") scale(" + f.lado + " 1) rotate(" + lerp(-70, i < 2 ? -24 : -48, s).toFixed(1) + ")");
+        f.inner.setAttribute("transform", "scale(" + s.toFixed(3) + ")");
+      });
+
+      /* brisa e saída */
+      var brisa = Math.sin(now / 1500) * 1.6 * r;
+      planta.setAttribute("transform", "rotate(" + brisa.toFixed(2) + " 160 290) translate(160 290) scale(1.22) translate(-160 -290)");
+      planta.setAttribute("opacity", (1 - some).toFixed(3));
+      sol.setAttribute("opacity", (.6 + Math.sin(now / 2600) * .25).toFixed(3));
+      setInfo(t);
+    };
+
+    var fixo = /[?&]muda=([\d.]+)/.exec(location.search);
+    if (fixo) { draw(+fixo[1], 0); return; }
+    if (reduce) { draw(14, 0); return; }
+    var inicio = (doc.classList.contains("intro") ? 1500 : 0) + 900, t0 = null, visivel = true, raf = 0;
+    function loop(now) {
+      raf = 0;
+      if (!t0) t0 = now;
+      var el = Math.max(0, now - t0 - inicio) / 1000;
+      draw(el % CICLO, now);
+      if (visivel) raf = requestAnimationFrame(loop);
+    }
+    if (hasIO) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; if (visivel && !raf) raf = requestAnimationFrame(loop); }).observe(muda);
+    raf = requestAnimationFrame(loop);
+  })();
+
+  /* ---------- Manifesto lido na rolagem ---------- */
+  var words = [];
+  $$("[data-words]").forEach(function (p) {
+    var html = "";
+    p.childNodes.forEach(function (node) {
+      var hl = node.nodeType === 1;
+      (node.textContent || "").split(/(\s+)/).forEach(function (w) {
+        if (!w.trim()) { html += w; return; }
+        html += '<span class="w' + (hl ? " hl" : "") + '">' + w + "</span>";
+      });
     });
-    reel.addEventListener("focusin", function (event) {
-      if (!event.target.matches(":focus-visible")) return;
-      reelPlaying = false;
-      updateReelPlayback();
+    p.innerHTML = html;
+    words = words.concat($$(".w", p).map(function (w) { return { el: w, box: p }; }));
+  });
+  function paintWords() {
+    if (!words.length) return;
+    var vh = window.innerHeight;
+    var groups = {};
+    words.forEach(function (o) { var r = o.box.getBoundingClientRect(); var prog = Math.max(0, Math.min(1, (vh * .85 - r.top) / (r.height + vh * .3))); o.box._p = prog; });
+    var counts = new Map();
+    words.forEach(function (o) {
+      var arr = counts.get(o.box) || []; arr.push(o.el); counts.set(o.box, arr);
     });
-    reel.addEventListener("pointerenter", function (event) {
-      if (event.pointerType !== "mouse") return;
-      reelHovered = true;
-      queueScene();
-    });
-    reel.addEventListener("pointerleave", function () {
-      reelHovered = false;
-      queueScene();
-    });
-    document.addEventListener("visibilitychange", queueScene);
-    motion.addEventListener("change", function () {
-      if (motion.matches) reelPlaying = false;
-      updateReelPlayback();
-    });
-    if (hasIO) new IntersectionObserver(function (entries) {
-      reelVisible = entries[0].intersectionRatio >= .35;
-      queueScene();
-    }, { threshold: .35 }).observe(reel);
-    $(".field-controls", reel).hidden = false;
-    updateReelPlayback();
+    counts.forEach(function (arr, box) { var n = Math.round(box._p * arr.length); arr.forEach(function (w, k) { w.classList.toggle("on", k < n); }); });
+    void groups;
   }
+  if (reduce) $$(".w").forEach(function (w) { w.classList.add("on"); });
+  else { window.addEventListener("scroll", function () { requestAnimationFrame(paintWords); }, { passive: true }); paintWords(); }
 
   /* ---------- Títulos que sobem palavra a palavra ---------- */
   var splitEls = $$("[data-split]");

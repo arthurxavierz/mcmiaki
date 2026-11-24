@@ -41,7 +41,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = ROOT / "src" / "pages"
 OUT = ROOT / "dist"
 SITE = "https://mcmiaki.achillesmedia.com.br"
-V = "8"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
+V = "9"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
 
 LANG = "pt"
 FALTANDO = set()
@@ -521,6 +521,7 @@ def header(current, theme, name):
     over = "".join(f'<li><a href="{h}"{cur(k, current)}>{t(l)}</a></li>' for k, l, h, _ in NAV)
     return f"""<a class="skip" href="#conteudo">{t('Pular para o conteúdo')}</a>
 <div class="progress-bar" aria-hidden="true"></div>
+<div class="curtain" aria-hidden="true"><img class="curtain-mark" src="assets/logo-mcmiaki-w-2.svg" alt=""><span class="curtain-alt label"><b data-alt>0000</b> m · Chapadão de Ferro</span></div>
 <header class="site-header" data-theme="{theme}">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="{t('MC Miaki Coffee, página inicial')}">{LOGO_ESCURO}{LOGO_CLARO}</a>
@@ -639,7 +640,7 @@ def page(meta, body, name):
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v={V}">
 <script>document.documentElement.classList.replace('no-js','js')</script>
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
