@@ -727,8 +727,8 @@ html.intro .curtain { display: grid; place-items: center; align-content: center;
 @media (max-width: 900px) { .alt-zone .label { display: none; } .alt-chart { margin-top: 30px; } }
 
 /* do grão à muda: cafezinho nascendo no hero */
-.hero-muda { grid-area: card; align-self: center; width: clamp(270px, 23vw, 330px); margin-top: 24px; border-radius: 16px; overflow: hidden; background: rgba(14,16,12,.5); border: 1px solid var(--line-inv); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 40px 80px -40px rgba(0,0,0,.7); animation: fadeUp 1.2s calc(var(--d0, 0s) + .9s) var(--ease) both; color: var(--paper); }
-.muda-svg { display: block; width: 100%; height: auto; max-height: 42vh; aspect-ratio: 320 / 400; }
+.hero-muda { grid-area: card; align-self: center; width: clamp(220px, min(23vw, 36vh), 330px); margin-top: 24px; border-radius: 16px; overflow: hidden; background: rgba(14,16,12,.5); border: 1px solid var(--line-inv); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 40px 80px -40px rgba(0,0,0,.7); animation: fadeUp 1.2s calc(var(--d0, 0s) + .9s) var(--ease) both; color: var(--paper); }
+.muda-svg { display: block; width: 100%; height: auto; aspect-ratio: 320 / 400; }
 .muda-info { padding: 16px 18px 16px; border-top: 1px solid var(--line-inv); }
 .muda-head { display: flex; justify-content: space-between; align-items: center; color: var(--muted-inv); }
 .muda-n { color: var(--green-lt); font-variant-numeric: tabular-nums; }

@@ -41,7 +41,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = ROOT / "src" / "pages"
 OUT = ROOT / "dist"
 SITE = "https://mcmiaki.achillesmedia.com.br"
-V = "9"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
+V = "10"  # versão dos arquivos estáticos; aumente a cada publicação de CSS ou JS
 
 LANG = "pt"
 FALTANDO = set()
