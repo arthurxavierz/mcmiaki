@@ -18,12 +18,12 @@ Preview local: config `mcmiaki` (porta 5290) no `.claude/launch.json` da pasta d
 Início, Sobre (gestão, terroir com o corte do vulcão, sustentabilidade, certificações, Cafeeira Porta do Céu), História (linha do tempo e prêmios), Fazendas (gráfico de altitude e fichas dos 6 núcleos), Qualidade (4 processamentos e 12 etapas), Fotos e vídeos (galeria com filtro e filmes do YouTube), Certificações (os 5 selos em detalhe, o que garantem e os prêmios) e Contato (canais, formulário que abre o e-mail, mapa).
 
 ## Identidade
-Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja da marca. Anton nos títulos, Geist no texto, Geist Mono em rótulos.
+Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja da marca. Instrument Serif na abertura e nos destaques editoriais, Anton nos títulos internos, Geist no texto e Geist Mono em rótulos.
 
 ## Mídia
-- Vídeos de drone em `dist/assets/video/` são cortes dos filmes do próprio canal da MC Miaki no YouTube (originais em `_raw/yt`, fora do git). O hero junta 5 tomadas (`hero.mp4` 1440 px e `hero-m.mp4` vertical).
+- Vídeos de drone em `dist/assets/video/` são cortes dos filmes do próprio canal da MC Miaki no YouTube (originais em `_raw/yt`, fora do git).
 - `dist/assets/video/films/{id}.mp4` são recortes mudos de 7 s de cada filme (lista `VIDEOS` no `build.py`), usados como prévia em movimento na sala de filmes da home, nos filmes em destaque (Sobre, História, Qualidade) e na grade de Fotos e vídeos. O clique abre o filme completo do YouTube.
-- O galho do hero (ciclo da safra: florada, chumbinho, granação, maturação, colheita) é desenhado em código no `main.js`; os textos de cada fase ficam no atributo `data-ciclo` da home.
+- O caderno de campo da abertura reúne três fotos do acervo (`dist/assets/img/campo-*.webp`). As legendas estão nos HTMLs da home em português e inglês. A navegação e a pausa ficam em `main.js`.
 - Fotos em `dist/assets/img/` vêm do acervo do site antigo.
 
 ## Validar com o cliente antes de vender

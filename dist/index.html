@@ -21,17 +21,14 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=7">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@200..600&family=Geist+Mono:wght@300..500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=8">
 <script>document.documentElement.classList.replace('no-js','js')</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "MC Miaki Coffee", "url": "https://mcmiaki.achillesmedia.com.br", "logo": "https://mcmiaki.achillesmedia.com.br/assets/logo-mcmiaki.svg", "email": "contato@mcmiaki.coffee", "telephone": "+55 34 3831-1481", "address": {"@type": "PostalAddress", "streetAddress": "Av. Faria Pereira, 4153, Distrito Industrial", "addressLocality": "Patrocínio", "addressRegion": "MG", "postalCode": "38740-000", "addressCountry": "BR"}, "sameAs": ["https://www.instagram.com/mcmiaki/", "https://facebook.com/mcmiaki", "https://www.youtube.com/channel/UCtDmdTN7999k68x99sFEefA"]}</script>
-<script>try{if(!sessionStorage.getItem('mcm-intro')){document.documentElement.classList.add('intro');sessionStorage.setItem('mcm-intro','1')}}catch(e){}</script>
-<link rel="preload" as="image" href="assets/video/hero.jpg">
 </head>
 <body data-page="index">
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <div class="progress-bar" aria-hidden="true"></div>
-<div class="curtain" aria-hidden="true"><img class="curtain-mark" src="assets/logo-mcmiaki-w-2.svg" alt=""><span class="curtain-alt label"><b data-alt>0000</b> m · Chapadão de Ferro</span></div>
 <header class="site-header" data-theme="dark">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="MC Miaki Coffee, página inicial"><img class="logo-d" src="assets/logo-mcmiaki.svg" alt="" width="100" height="92"><img class="logo-l" src="assets/logo-mcmiaki-w-2.svg" alt="" width="100" height="92"></a>
@@ -54,22 +51,13 @@
 
 <main id="conteudo">
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media" aria-hidden="true">
-    <video muted loop playsinline autoplay preload="auto" poster="assets/video/hero.jpg" data-desktop="assets/video/hero.mp4" data-mobile="assets/video/hero-m.mp4"></video>
-  </div>
-  <div class="hero-shade" aria-hidden="true"></div>
-  <div class="hero-grain" aria-hidden="true"></div>
   <div class="wrap">
-    <div class="hero-top label">
-      <span>Patrocínio · Cerrado Mineiro · Brasil</span>
-      <span>Chapadão de Ferro · 1.250 m</span>
-    </div>
-
     <div class="hero-main">
-      <h1 class="display hero-title" id="hero-title">
+      <p class="hero-origin label">Patrocínio, MG · Cerrado Mineiro</p>
+      <h1 class="hero-title" id="hero-title">
         <span class="line"><span>Cafés especiais</span></span>
         <span class="line"><span>por toda a</span></span>
-        <span class="line"><span class="fill">extensão</span></span>
+        <span class="line"><em>extensão</em></span>
       </h1>
       <div class="hero-lead">
         <p>Há três gerações a família Miaki cultiva café no Cerrado Mineiro. São 2.665 hectares em Patrocínio, a maior parte no Chapadão de Ferro, a até 1.250 metros de altitude.</p>
@@ -80,14 +68,43 @@
       </div>
     </div>
 
-    <div class="hero-ciclo" aria-hidden="true" data-ciclo='{"meses":["Set","Out","Nov","Dez","Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago"],"fases":[{"m":0,"n":"Florada","t":"A flor branca dura três dias e anuncia a safra."},{"m":1.8,"n":"Chumbinho","t":"Os frutos pegam pequenos e verdes, do tamanho de um chumbo."},{"m":4,"n":"Granação","t":"Com as chuvas do verão, o grão ganha corpo."},{"m":6.8,"n":"Maturação","t":"Noites frias do Chapadão: a cereja vira do verde ao vermelho devagar."},{"m":9,"n":"Colheita","t":"Cereja no ponto. Hora de colher, à máquina ou à mão."}]}'>
-      <svg class="ramo" viewBox="0 0 380 470" data-ramo></svg>
-      <div class="safra">
-        <div class="safra-head"><span class="label">Ciclo da safra</span><span class="label safra-mes" data-mes>Set</span></div>
-        <strong class="safra-fase" data-fase>Florada</strong>
-        <p class="safra-txt" data-fase-txt>A flor branca dura três dias e anuncia a safra.</p>
-        <div class="safra-reg" data-reg><i data-pos></i></div>
+    <div class="field-reel" role="region" aria-label="Caderno de campo" data-field-reel>
+      <div class="field-top label">
+        <span>Caderno de campo</span>
+        <span>Chapadão de Ferro · 1.250 m</span>
       </div>
+      <div class="field-viewport">
+        <figure class="field-scene is-active">
+          <img src="assets/img/campo-chapadao.webp" alt="Fileiras curvas de cafeeiros vistas do alto no Chapadão de Ferro" decoding="async" fetchpriority="high">
+          <figcaption class="field-caption">
+            <span class="label">O território</span>
+            <strong>Chapadão de Ferro</strong>
+          </figcaption>
+        </figure>
+        <figure class="field-scene" aria-hidden="true">
+          <img src="assets/img/campo-florada.webp" alt="Flores brancas nos ramos de um cafeeiro" decoding="async">
+          <figcaption class="field-caption">
+            <span class="label">A florada</span>
+            <strong>O início da safra</strong>
+          </figcaption>
+        </figure>
+        <figure class="field-scene" aria-hidden="true">
+          <img src="assets/img/campo-colheita.webp" alt="Trabalhadora peneirando cerejas de café na lavoura" decoding="async">
+          <figcaption class="field-caption">
+            <span class="label">A colheita</span>
+            <strong>Cerejas no ponto</strong>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="field-controls" hidden>
+        <div class="field-track" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
+        <div class="field-buttons">
+          <button class="field-prev" type="button" aria-label="Cena anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button class="field-toggle" type="button" aria-label="Pausar sequência" data-pause="Pausar sequência" data-play="Reproduzir sequência"><span aria-hidden="true"></span></button>
+          <button class="field-next" type="button" aria-label="Próxima cena"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <p class="sr-only" data-field-status role="status"></p>
     </div>
 
     <div class="hero-bottom">
@@ -96,7 +113,7 @@
         <a href="https://www.instagram.com/mcmiaki/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg> @mcmiaki</a>
         <a href="contato.html#mapa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Como chegar</a>
       </div>
-      <span class="scroll-cue label"><i></i>Role</span>
+      <a class="scroll-cue label" href="#quem-somos">Explore a fazenda <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>
@@ -108,12 +125,12 @@
   </div>
 </div>
 
-<section class="section manifesto" aria-label="Quem somos">
+<section class="section manifesto" id="quem-somos" aria-label="Quem somos">
   <div class="wrap">
     <div class="sec-head">
       <span class="label"><b>01</b> / Quem somos</span>
       <div>
-        <p class="big" data-words>Uma família apaixonada pelo café, que se relaciona de forma sábia com a natureza e produz <em>lotes fantásticos, de maneira sustentável.</em> Verdadeiras joias.</p>
+        <p class="big">Uma família apaixonada pelo café, que se relaciona de forma sábia com a natureza e produz <em>lotes fantásticos, de maneira sustentável.</em> Verdadeiras joias.</p>
       </div>
     </div>
 
@@ -387,6 +404,6 @@
   <button class="vmodal-close" type="button" aria-label="Fechar vídeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
 </div>
 <dialog class="lightbox" aria-label="Foto ampliada"><img src="" alt=""><p class="label"></p><button type="button" class="lb-close" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></dialog>
-<script src="assets/js/main.js?v=7" defer></script>
+<script src="assets/js/main.js?v=8" defer></script>
 </body>
 </html>

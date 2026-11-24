@@ -2,29 +2,17 @@
 (function () {
   "use strict";
   var doc = document.documentElement;
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var reduce = motion.matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var EN = /^en/i.test(doc.lang);
   var fmt = function (n) { return Math.round(n).toLocaleString(EN ? "en-US" : "pt-BR"); };
   var hasIO = "IntersectionObserver" in window;
 
-  /* ---------- Cortina: altímetro sobe até 1.250 m ---------- */
-  var alt = $("[data-alt]");
-  if (alt && doc.classList.contains("intro")) {
-    var t0 = null;
-    var stepAlt = function (t) {
-      if (!t0) t0 = t;
-      var p = Math.min(1, (t - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
-      alt.textContent = String(Math.round(e * 1250)).padStart(4, "0");
-      if (p < 1) requestAnimationFrame(stepAlt);
-    };
-    requestAnimationFrame(stepAlt);
-  }
-
   /* ---------- Cabeçalho, progresso e paralaxe ---------- */
   var header = $(".site-header"), bar = $(".progress-bar"), last = 0;
-  var heroMedia = $(".hero-media video, .page-hero .ph-media video, .page-hero .ph-media img");
+  var heroMedia = $(".page-hero .ph-media video, .page-hero .ph-media img");
   var paras = $$("[data-parallax], .banner-media img");
   function onScroll() {
     var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
@@ -65,12 +53,11 @@
     $$("a", overlay).forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
   }
 
-  /* ---------- Vídeo do hero: versão certa para a tela ---------- */
+  /* ---------- Vídeos das páginas internas ---------- */
   $$("video[data-desktop]").forEach(function (v) {
-    var src = window.innerWidth < 760 && v.getAttribute("data-mobile") ? v.getAttribute("data-mobile") : v.getAttribute("data-desktop");
     var save = navigator.connection && navigator.connection.saveData;
     if (reduce || save) return;
-    v.src = src;
+    v.src = v.getAttribute("data-desktop");
     var p = v.play(); if (p && p.catch) p.catch(function () {});
   });
   /* vídeos que só carregam perto da tela e pausam quando saem dela */
@@ -88,32 +75,9 @@
     });
   }
 
-  /* ---------- Título do hero letra a letra ---------- */
-  var title = $(".hero-title");
-  if (title) {
-    var i = 0;
-    $$(".line", title).forEach(function (line) {
-      var walk = function (node) {
-        Array.prototype.slice.call(node.childNodes).forEach(function (n) {
-          if (n.nodeType === 3) {
-            var frag = document.createDocumentFragment();
-            Array.from(n.textContent.normalize("NFC")).forEach(function (c) {
-              var s = document.createElement("span");
-              s.className = "ch"; s.style.setProperty("--i", i++);
-              s.textContent = c === " " ? " " : c;
-              frag.appendChild(s);
-            });
-            n.parentNode.replaceChild(frag, n);
-          } else if (n.nodeType === 1) walk(n);
-        });
-      };
-      walk(line);
-    });
-  }
-
   /* ---------- Títulos grandes sempre cabem na largura ----------
      Se a linha mais longa passar do espaço, a fonte encolhe na medida certa. */
-  var fitEls = $$(".hero-title, .page-hero h1.mega");
+  var fitEls = $$(".page-hero h1.mega");
   function fitTitles() {
     fitEls.forEach(function (el) {
       el.style.fontSize = "";
@@ -134,145 +98,85 @@
   var fitT = 0;
   window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitTitles, 120); });
 
-  /* ---------- Ciclo da safra: galho de café do Chapadão ---------- */
-  var ciclo = $("[data-ciclo]");
-  if (ciclo) (function () {
-    var cfg = JSON.parse(ciclo.getAttribute("data-ciclo"));
-    var svg = $("[data-ramo]", ciclo), NS = "http://www.w3.org/2000/svg";
-    var mk = function (tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; };
-    var seed = 11, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-    var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
-    var sm = function (a, b, x) { var p = clamp((x - a) / (b - a)); return p * p * (3 - 2 * p); };
+  /* ---------- Caderno de campo ---------- */
+  var reel = $("[data-field-reel]");
+  if (reel) {
+    var scenes = $$(".field-scene", reel);
+    var markers = $$(".field-track span", reel);
+    var reelToggle = $(".field-toggle", reel);
+    var reelStatus = $("[data-field-status]", reel);
+    var currentScene = 0;
+    var previousScene = null;
+    var reelTimer;
+    var reelVisible = !hasIO;
+    var reelHovered = false;
+    var reelPlaying = !reduce && !(navigator.connection && navigator.connection.saveData);
 
-    var defs = mk("defs", {}, svg);
-    var gl = mk("linearGradient", { id: "fl", x1: "0", y1: "0", x2: "1", y2: "0" }, defs);
-    mk("stop", { offset: "0", "stop-color": "#1d4a2a" }, gl); mk("stop", { offset: ".55", "stop-color": "#2f6d3a" }, gl); mk("stop", { offset: "1", "stop-color": "#3f8446" }, gl);
-    var sway = mk("g", {}, svg);
-    var D = "M378 6 C 340 62, 312 112, 276 168 S 204 284, 156 344 S 74 430, 22 464";
-    var casca = mk("path", { d: D, fill: "none", stroke: "#4b3a22", "stroke-width": "7", "stroke-linecap": "round", "stroke-dasharray": "1", "stroke-dashoffset": "1", pathLength: "1" }, sway);
-    var galho = mk("path", { d: D, fill: "none", stroke: "#8a7040", "stroke-width": "2.2", "stroke-linecap": "round", "stroke-dasharray": "1", "stroke-dashoffset": "1", pathLength: "1", opacity: ".8" }, sway);
-    var tot = galho.getTotalLength();
-    var at = function (f) { var p = galho.getPointAtLength(tot * f), q = galho.getPointAtLength(Math.min(tot, tot * f + 1)); return { x: p.x, y: p.y, a: Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI }; };
-
-    var gFolhas = mk("g", {}, sway), gFrutos = mk("g", {}, sway), gFlores = mk("g", {}, sway);
-    var folhas = [], frutos = [], flores = [];
-    var leaf = function (L, w) { return "M0 0 C " + L * .25 + " " + -w + ", " + L * .7 + " " + -w * .9 + ", " + L + " 0 C " + L * .7 + " " + w * .9 + ", " + L * .25 + " " + w + ", 0 0Z"; };
-    var nos = [.09, .22, .36, .5, .64, .78, .9];
-    nos.forEach(function (f, k) {
-      var n = at(f), L = 96 - k * 7, w = L * .26;
-      [-1, 1].forEach(function (lado, j) {
-        var ang = n.a + lado * (62 - k * 2) + 12;
-        var g = mk("g", { transform: "translate(" + n.x.toFixed(1) + " " + n.y.toFixed(1) + ") rotate(" + ang.toFixed(1) + ")" }, gFolhas);
-        var inner = mk("g", {}, g);
-        mk("path", { d: leaf(L, w), fill: "url(#fl)" }, inner);
-        mk("path", { d: "M2 0 Q " + L * .5 + " " + (lado * -2) + " " + (L - 4) + " 0", stroke: "rgba(220,240,210,.28)", "stroke-width": "1.1", fill: "none" }, inner);
-        folhas.push({ el: inner, d: .15 + k * .13 + j * .06 });
-      });
-      var nf = 6 + (k % 2);
-      for (var c = 0; c < nf; c++) {
-        var ang2 = (c / nf) * Math.PI * 2 + rnd() * .5, dist = 7 + rnd() * 8, r = 6.2 + rnd() * 2.2;
-        var x = n.x + Math.cos(ang2) * dist, y = n.y + Math.sin(ang2) * dist * .8 + 5;
-        var g2 = mk("g", { transform: "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")" }, gFrutos);
-        var inn = mk("g", {}, g2);
-        var corpo = mk("circle", { r: r.toFixed(1), fill: "#6f9a3a" }, inn);
-        mk("circle", { cx: (-r * .34).toFixed(1), cy: (-r * .36).toFixed(1), r: (r * .3).toFixed(1), fill: "#fff", opacity: ".38" }, inn);
-        mk("circle", { cx: (r * .42).toFixed(1), cy: (r * .45).toFixed(1), r: "1", fill: "rgba(20,12,8,.45)" }, inn);
-        frutos.push({ el: inn, body: corpo, off: (rnd() - .5) * .9, queda: 9.25 + rnd() * 2.1, dx: (rnd() - .5) * 40, rot: (rnd() - .5) * 220 });
-      }
-      for (var fl = 0; fl < 5; fl++) {
-        var a3 = (fl / 5) * Math.PI * 2 + rnd(), d3 = 10 + rnd() * 9;
-        var fx = n.x + Math.cos(a3) * d3, fy = n.y + Math.sin(a3) * d3 * .8 + 3, s = 6 + rnd() * 3;
-        var g3 = mk("g", { transform: "translate(" + fx.toFixed(1) + " " + fy.toFixed(1) + ") rotate(" + (rnd() * 72).toFixed(0) + ")" }, gFlores);
-        var in3 = mk("g", {}, g3);
-        for (var pp = 0; pp < 5; pp++) mk("ellipse", { cx: "0", cy: (-s * .62).toFixed(1), rx: (s * .32).toFixed(1), ry: (s * .62).toFixed(1), fill: "#fbfaf4", transform: "rotate(" + pp * 72 + ")" }, in3);
-        mk("circle", { r: (s * .22).toFixed(1), fill: "#e9d98a" }, in3);
-        flores.push({ el: in3, off: rnd() * .5, dy: 8 + rnd() * 18 });
-      }
-    });
-
-    /* verde > amarelo > vermelho cereja > passa */
-    var cores = [[111, 154, 58], [201, 177, 58], [214, 92, 44], [176, 28, 42], [110, 22, 30]];
-    var cor = function (p) {
-      var x = clamp(p) * (cores.length - 1), i = Math.min(cores.length - 2, Math.floor(x)), f = x - i, a = cores[i], b = cores[i + 1];
-      return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * f) + "," + Math.round(a[1] + (b[1] - a[1]) * f) + "," + Math.round(a[2] + (b[2] - a[2]) * f) + ")";
-    };
-
-    var reg = $("[data-reg]", ciclo), pos = $("[data-pos]", ciclo);
-    cfg.meses.forEach(function (m) { var s = document.createElement("span"); s.textContent = m.charAt(0); reg.insertBefore(s, pos); });
-    var elMes = $("[data-mes]", ciclo), elFase = $("[data-fase]", ciclo), elTxt = $("[data-fase-txt]", ciclo), faseAt = 0, mesAt = 0;
-    var setFase = function (m) {
-      var k = 0; cfg.fases.forEach(function (f, i) { if (m >= f.m) k = i; });
-      var mi = Math.floor(m) % 12;
-      if (mi !== mesAt) { mesAt = mi; elMes.textContent = cfg.meses[mi]; }
-      if (k !== faseAt) {
-        faseAt = k; ciclo.classList.add("troca");
-        setTimeout(function () { elFase.textContent = cfg.fases[k].n; elTxt.textContent = cfg.fases[k].t; ciclo.classList.remove("troca"); }, 260);
-      }
-      pos.style.left = (m / 12 * 100).toFixed(2) + "%";
-    };
-
-    var draw = function (m, crescer) {
-      folhas.forEach(function (o) { var s = sm(o.d, o.d + .6, crescer); o.el.setAttribute("transform", "scale(" + s.toFixed(3) + ")"); });
-      var g0 = (1 - sm(0, .9, crescer)).toFixed(3);
-      casca.setAttribute("stroke-dashoffset", g0); galho.setAttribute("stroke-dashoffset", g0);
-      flores.forEach(function (o) {
-        var abre = sm(.05 + o.off, .7 + o.off, m), cai = sm(1.3 + o.off, 1.95 + o.off, m);
-        var s = m > 2.3 ? 0 : abre;
-        o.el.setAttribute("transform", "translate(0 " + (cai * o.dy).toFixed(1) + ") scale(" + s.toFixed(3) + ")");
-        o.el.setAttribute("opacity", (1 - cai).toFixed(2));
-      });
-      frutos.forEach(function (o) {
-        var s = sm(1.8, 2.9, m) * .36 + sm(4, 6.6, m) * .64;
-        var q = clamp((m - o.queda) / .5), y = q * q * 300, rot = q * o.rot;
-        if (m < 1.7 || m > 11.9) s = 0;
-        o.el.setAttribute("transform", "translate(" + (q * o.dx).toFixed(1) + " " + y.toFixed(1) + ") rotate(" + rot.toFixed(0) + ") scale(" + s.toFixed(3) + ")");
-        o.el.setAttribute("opacity", (1 - q * q).toFixed(2));
-        o.body.setAttribute("fill", cor(sm(6.8 + o.off, 8.7 + o.off, m) * .78 + sm(10.6, 11.6, m) * .22));
-      });
-    };
-
-    if (reduce) { draw(8.6, 3); setFase(8.6); return; }
-    var T = 1250, inicio = (doc.classList.contains("intro") ? 1500 : 0) + 900, t0 = null, visivel = true, raf = 0;
-    function loop(now) {
-      raf = 0;
-      if (!t0) t0 = now;
-      var el = now - t0, crescer = el / 1000, m = Math.max(0, (el - inicio) / T) % 12;
-      draw(m, crescer); setFase(m);
-      sway.setAttribute("transform", "rotate(" + (Math.sin(now / 1400) * 1.3).toFixed(2) + " 378 6)");
-      if (visivel) raf = requestAnimationFrame(loop);
+    function queueScene() {
+      clearTimeout(reelTimer);
+      if (!reelPlaying || !reelVisible || reelHovered || document.hidden) return;
+      reelTimer = setTimeout(function () { selectScene(1, false); }, 6800);
     }
-    if (hasIO) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; if (visivel && !raf) raf = requestAnimationFrame(loop); }).observe(ciclo);
-    raf = requestAnimationFrame(loop);
-  })();
 
-  /* ---------- Manifesto lido na rolagem ---------- */
-  var words = [];
-  $$("[data-words]").forEach(function (p) {
-    var html = "";
-    p.childNodes.forEach(function (node) {
-      var hl = node.nodeType === 1;
-      (node.textContent || "").split(/(\s+)/).forEach(function (w) {
-        if (!w.trim()) { html += w; return; }
-        html += '<span class="w' + (hl ? " hl" : "") + '">' + w + "</span>";
-      });
+    function updateReelPlayback() {
+      reel.classList.toggle("is-playing", reelPlaying);
+      reelToggle.setAttribute("aria-label", reelPlaying ? reelToggle.dataset.pause : reelToggle.dataset.play);
+      reelToggle.hidden = motion.matches;
+      queueScene();
+    }
+
+    function selectScene(direction, manual) {
+      var outgoing = scenes[currentScene];
+      if (previousScene) previousScene.classList.remove("is-previous");
+      outgoing.classList.replace("is-active", "is-previous");
+      outgoing.setAttribute("aria-hidden", "true");
+      markers[currentScene].classList.remove("is-current");
+      previousScene = outgoing;
+      currentScene = (currentScene + direction + scenes.length) % scenes.length;
+      var incoming = scenes[currentScene];
+      incoming.classList.add("is-active");
+      incoming.removeAttribute("aria-hidden");
+      markers[currentScene].classList.add("is-current");
+
+      if (manual) {
+        reelPlaying = false;
+        reelStatus.textContent = $(".field-caption strong", incoming).textContent;
+      }
+      updateReelPlayback();
+    }
+
+    $(".field-prev", reel).addEventListener("click", function () { selectScene(-1, true); });
+    $(".field-next", reel).addEventListener("click", function () { selectScene(1, true); });
+    reelToggle.addEventListener("click", function () {
+      reelPlaying = !reelPlaying;
+      updateReelPlayback();
     });
-    p.innerHTML = html;
-    words = words.concat($$(".w", p).map(function (w) { return { el: w, box: p }; }));
-  });
-  function paintWords() {
-    if (!words.length) return;
-    var vh = window.innerHeight;
-    var groups = {};
-    words.forEach(function (o) { var r = o.box.getBoundingClientRect(); var prog = Math.max(0, Math.min(1, (vh * .85 - r.top) / (r.height + vh * .3))); o.box._p = prog; });
-    var counts = new Map();
-    words.forEach(function (o) {
-      var arr = counts.get(o.box) || []; arr.push(o.el); counts.set(o.box, arr);
+    reel.addEventListener("focusin", function (event) {
+      if (!event.target.matches(":focus-visible")) return;
+      reelPlaying = false;
+      updateReelPlayback();
     });
-    counts.forEach(function (arr, box) { var n = Math.round(box._p * arr.length); arr.forEach(function (w, k) { w.classList.toggle("on", k < n); }); });
-    void groups;
+    reel.addEventListener("pointerenter", function (event) {
+      if (event.pointerType !== "mouse") return;
+      reelHovered = true;
+      queueScene();
+    });
+    reel.addEventListener("pointerleave", function () {
+      reelHovered = false;
+      queueScene();
+    });
+    document.addEventListener("visibilitychange", queueScene);
+    motion.addEventListener("change", function () {
+      if (motion.matches) reelPlaying = false;
+      updateReelPlayback();
+    });
+    if (hasIO) new IntersectionObserver(function (entries) {
+      reelVisible = entries[0].intersectionRatio >= .35;
+      queueScene();
+    }, { threshold: .35 }).observe(reel);
+    $(".field-controls", reel).hidden = false;
+    updateReelPlayback();
   }
-  if (reduce) $$(".w").forEach(function (w) { w.classList.add("on"); });
-  else { window.addEventListener("scroll", function () { requestAnimationFrame(paintWords); }, { passive: true }); paintWords(); }
 
   /* ---------- Títulos que sobem palavra a palavra ---------- */
   var splitEls = $$("[data-split]");

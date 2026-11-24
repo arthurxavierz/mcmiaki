@@ -1,22 +1,13 @@
-<!--meta {"title": "MC Miaki Coffee · Cafés especiais do Chapadão de Ferro, Patrocínio, MG", "description": "Cafés especiais, sustentáveis e 100% rastreáveis de um terroir vulcânico único: o Chapadão de Ferro, a 1.250 metros, em Patrocínio, no Cerrado Mineiro. Três gerações da família Miaki.", "nav": "index", "theme": "dark", "head": "<script>try{if(!sessionStorage.getItem('mcm-intro')){document.documentElement.classList.add('intro');sessionStorage.setItem('mcm-intro','1')}}catch(e){}</script>\n<link rel=\"preload\" as=\"image\" href=\"assets/video/hero.jpg\">\n"} -->
+<!--meta {"title": "MC Miaki Coffee · Cafés especiais do Chapadão de Ferro, Patrocínio, MG", "description": "Cafés especiais, sustentáveis e 100% rastreáveis de um terroir vulcânico único: o Chapadão de Ferro, a 1.250 metros, em Patrocínio, no Cerrado Mineiro. Três gerações da família Miaki.", "nav": "index", "theme": "dark"} -->
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media" aria-hidden="true">
-    <video muted loop playsinline autoplay preload="auto" poster="assets/video/hero.jpg" data-desktop="assets/video/hero.mp4" data-mobile="assets/video/hero-m.mp4"></video>
-  </div>
-  <div class="hero-shade" aria-hidden="true"></div>
-  <div class="hero-grain" aria-hidden="true"></div>
   <div class="wrap">
-    <div class="hero-top label">
-      <span>Patrocínio · Cerrado Mineiro · Brasil</span>
-      <span>Chapadão de Ferro · 1.250 m</span>
-    </div>
-
     <div class="hero-main">
-      <h1 class="display hero-title" id="hero-title">
+      <p class="hero-origin label">Patrocínio, MG · Cerrado Mineiro</p>
+      <h1 class="hero-title" id="hero-title">
         <span class="line"><span>Cafés especiais</span></span>
         <span class="line"><span>por toda a</span></span>
-        <span class="line"><span class="fill">extensão</span></span>
+        <span class="line"><em>extensão</em></span>
       </h1>
       <div class="hero-lead">
         <p>Há três gerações a família Miaki cultiva café no Cerrado Mineiro. São 2.665 hectares em Patrocínio, a maior parte no Chapadão de Ferro, a até 1.250 metros de altitude.</p>
@@ -27,14 +18,43 @@
       </div>
     </div>
 
-    <div class="hero-ciclo" aria-hidden="true" data-ciclo='{"meses":["Set","Out","Nov","Dez","Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago"],"fases":[{"m":0,"n":"Florada","t":"A flor branca dura três dias e anuncia a safra."},{"m":1.8,"n":"Chumbinho","t":"Os frutos pegam pequenos e verdes, do tamanho de um chumbo."},{"m":4,"n":"Granação","t":"Com as chuvas do verão, o grão ganha corpo."},{"m":6.8,"n":"Maturação","t":"Noites frias do Chapadão: a cereja vira do verde ao vermelho devagar."},{"m":9,"n":"Colheita","t":"Cereja no ponto. Hora de colher, à máquina ou à mão."}]}'>
-      <svg class="ramo" viewBox="0 0 380 470" data-ramo></svg>
-      <div class="safra">
-        <div class="safra-head"><span class="label">Ciclo da safra</span><span class="label safra-mes" data-mes>Set</span></div>
-        <strong class="safra-fase" data-fase>Florada</strong>
-        <p class="safra-txt" data-fase-txt>A flor branca dura três dias e anuncia a safra.</p>
-        <div class="safra-reg" data-reg><i data-pos></i></div>
+    <div class="field-reel" role="region" aria-label="Caderno de campo" data-field-reel>
+      <div class="field-top label">
+        <span>Caderno de campo</span>
+        <span>Chapadão de Ferro · 1.250 m</span>
       </div>
+      <div class="field-viewport">
+        <figure class="field-scene is-active">
+          <img src="assets/img/campo-chapadao.webp" alt="Fileiras curvas de cafeeiros vistas do alto no Chapadão de Ferro" decoding="async" fetchpriority="high">
+          <figcaption class="field-caption">
+            <span class="label">O território</span>
+            <strong>Chapadão de Ferro</strong>
+          </figcaption>
+        </figure>
+        <figure class="field-scene" aria-hidden="true">
+          <img src="assets/img/campo-florada.webp" alt="Flores brancas nos ramos de um cafeeiro" decoding="async">
+          <figcaption class="field-caption">
+            <span class="label">A florada</span>
+            <strong>O início da safra</strong>
+          </figcaption>
+        </figure>
+        <figure class="field-scene" aria-hidden="true">
+          <img src="assets/img/campo-colheita.webp" alt="Trabalhadora peneirando cerejas de café na lavoura" decoding="async">
+          <figcaption class="field-caption">
+            <span class="label">A colheita</span>
+            <strong>Cerejas no ponto</strong>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="field-controls" hidden>
+        <div class="field-track" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
+        <div class="field-buttons">
+          <button class="field-prev" type="button" aria-label="Cena anterior">{{ARROW}}</button>
+          <button class="field-toggle" type="button" aria-label="Pausar sequência" data-pause="Pausar sequência" data-play="Reproduzir sequência"><span aria-hidden="true"></span></button>
+          <button class="field-next" type="button" aria-label="Próxima cena">{{ARROW}}</button>
+        </div>
+      </div>
+      <p class="sr-only" data-field-status role="status"></p>
     </div>
 
     <div class="hero-bottom">
@@ -43,7 +63,7 @@
         <a href="{{INSTAGRAM}}" target="_blank" rel="noopener">{{ICON:instagram}} @mcmiaki</a>
         <a href="contato.html#mapa">{{ICON:pin}} Como chegar</a>
       </div>
-      <span class="scroll-cue label"><i></i>Role</span>
+      <a class="scroll-cue label" href="#quem-somos">Explore a fazenda {{ARROW}}</a>
     </div>
   </div>
 </section>
@@ -55,12 +75,12 @@
   </div>
 </div>
 
-<section class="section manifesto" aria-label="Quem somos">
+<section class="section manifesto" id="quem-somos" aria-label="Quem somos">
   <div class="wrap">
     <div class="sec-head">
       <span class="label"><b>01</b> / Quem somos</span>
       <div>
-        <p class="big" data-words>Uma família apaixonada pelo café, que se relaciona de forma sábia com a natureza e produz <em>lotes fantásticos, de maneira sustentável.</em> Verdadeiras joias.</p>
+        <p class="big">Uma família apaixonada pelo café, que se relaciona de forma sábia com a natureza e produz <em>lotes fantásticos, de maneira sustentável.</em> Verdadeiras joias.</p>
       </div>
     </div>
 
