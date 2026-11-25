@@ -726,19 +726,9 @@ html.intro .curtain { display: grid; place-items: center; align-content: center;
 .hero-title .fill .ch { padding-top: .28em; margin-top: -.28em; }
 @media (max-width: 900px) { .alt-zone .label { display: none; } .alt-chart { margin-top: 30px; } }
 
-/* do grão à muda: cafezinho nascendo no hero */
-.hero-muda { grid-area: card; align-self: center; width: clamp(220px, min(23vw, 36vh), 330px); margin-top: 24px; border-radius: 16px; overflow: hidden; background: rgba(14,16,12,.5); border: 1px solid var(--line-inv); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 40px 80px -40px rgba(0,0,0,.7); animation: fadeUp 1.2s calc(var(--d0, 0s) + .9s) var(--ease) both; color: var(--paper); }
-.muda-svg { display: block; width: 100%; height: auto; aspect-ratio: 320 / 400; }
-.muda-info { padding: 16px 18px 16px; border-top: 1px solid var(--line-inv); }
-.muda-head { display: flex; justify-content: space-between; align-items: center; color: var(--muted-inv); }
-.muda-n { color: var(--green-lt); font-variant-numeric: tabular-nums; }
-.muda-fase { display: block; font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1; text-transform: uppercase; letter-spacing: .01em; margin-top: 10px; transition: opacity .25s, transform .25s var(--ease); }
-.muda-txt { margin: 6px 0 0; font-size: 13.5px; line-height: 1.45; color: #cfd3c6; min-height: 4.35em; transition: opacity .25s .04s; }
-.hero-muda.troca .muda-fase { opacity: 0; transform: translateY(8px); }
-.hero-muda.troca .muda-txt { opacity: 0; }
-.muda-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 12px; }
-.muda-bar i { height: 3px; border-radius: 2px; background: rgba(242,239,230,.16); overflow: hidden; position: relative; }
-.muda-bar i::after { content: ""; position: absolute; inset: 0; background: var(--green-lt); transform: scaleX(var(--p, 0)); transform-origin: left; }
+/* grãos, cerejas e folhas flutuando no hero */
+.hero-graos { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; animation: graosIn 2s calc(var(--d0, 0s) + 1s) ease both; }
+@keyframes graosIn { to { opacity: 1; } }
 
 /* bandeiras de idioma */
 .site-header .wrap > .nav { margin-left: auto; }
@@ -799,9 +789,6 @@ html.intro .curtain { display: grid; place-items: center; align-content: center;
 .vid small { margin-top: -6px; }
 
 @media (max-width: 1100px) {
-  .hero-muda { position: absolute; right: calc(var(--gutter) - 6px); top: calc(var(--header-h) + 30px); width: clamp(120px, 30vw, 200px); margin: 0; z-index: 0; pointer-events: none; }
-  .hero-muda .muda-info { display: none; }
-  .muda-svg { max-height: none; }
   .hero-main { position: relative; z-index: 1; }
   .cine { grid-template-columns: 1fr; }
   .cine-list { flex-direction: row; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; gap: 8px; scrollbar-width: none; }
@@ -859,4 +846,3 @@ img, video, svg, iframe { max-width: 100%; }
   .cert-pil { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 700px) { .hero-top { visibility: hidden; } }

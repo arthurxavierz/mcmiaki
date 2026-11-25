@@ -23,7 +23,7 @@ Tirada da logo: verde `#007947`, grafite e creme. O vermelho fica só na cereja 
 ## Mídia
 - Vídeos de drone em `dist/assets/video/` são cortes dos filmes do próprio canal da MC Miaki no YouTube (originais em `_raw/yt`, fora do git). O hero junta 5 tomadas (`hero.mp4` 1440 px e `hero-m.mp4` vertical).
 - `dist/assets/video/films/{id}.mp4` são recortes mudos de 7 s de cada filme (lista `VIDEOS` no `build.py`), usados como prévia em movimento na sala de filmes da home, nos filmes em destaque (Sobre, História, Qualidade) e na grade de Fotos e vídeos. O clique abre o filme completo do YouTube.
-- A animação do hero ("Do grão à muda": semente, palito de fósforo, soldadinho, orelha de onça e muda) é desenhada em código no `main.js`; os textos de cada fase ficam no atributo `data-muda` da home. Para inspecionar uma fase parada, abra `index.html?muda=8` (segundos do ciclo de 16 s).
+- O hero tem grãos torrados, grãos crus, cerejas e folhas de café caindo devagar sobre o vídeo (canvas `data-graos`, desenhado em código no `main.js`; quantidade e tamanhos no objeto `tipos` e na variável `alvo`).
 - Fotos em `dist/assets/img/` vêm do acervo do site antigo.
 
 ## Validar com o cliente antes de vender

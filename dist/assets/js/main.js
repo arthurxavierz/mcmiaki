@@ -134,169 +134,119 @@
   var fitT = 0;
   window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitTitles, 120); });
 
-  /* ---------- Do grão à muda: um cafezinho nascendo no hero ----------
-     Corte de terra roxa com as fases reais da muda de café:
-     semente, palito de fósforo, soldadinho, orelha de onça e muda. */
-  var muda = $("[data-muda]");
-  if (muda) (function () {
-    var fases = JSON.parse(muda.getAttribute("data-muda"));
-    var svg = $("[data-muda-svg]", muda), NS = "http://www.w3.org/2000/svg";
-    var mk = function (tag, at, pai) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (pai) pai.appendChild(e); return e; };
-    var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
-    var sm = function (a, b, x) { var p = clamp((x - a) / (b - a)); return p * p * (3 - 2 * p); };
-    var lerp = function (a, b, p) { return a + (b - a) * p; };
-    var seed = 5, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-    var grad = function (id, stops, x2, y2) {
-      var g = mk("linearGradient", { id: id, x1: "0", y1: "0", x2: x2 || "0", y2: y2 || "1" }, defs);
-      stops.forEach(function (s) { mk("stop", { offset: s[0], "stop-color": s[1] }, g); });
-    };
+  /* ---------- Hero: grãos, cerejas e folhas de café flutuando ----------
+     Cada peça é desenhada uma vez num canvas próprio (nítida e desfocada)
+     e depois só é movida; as do fundo ficam menores, mais lentas e desfocadas. */
+  var graosCv = $("[data-graos]");
+  if (graosCv && graosCv.getContext) (function () {
+    var ctx = graosCv.getContext("2d"), hero = graosCv.parentElement;
+    var DPR = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0;
+    var seed = 7, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    var S = 128; // tamanho do sprite
 
-    var defs = mk("defs", {}, svg);
-    grad("m-solo", [["0", "#8a3d24"], [".35", "#5c2516"], ["1", "#2a110a"]]);
-    grad("m-folha", [["0", "#3f8f4a"], ["1", "#1e5a2e"]], "1", "1");
-    grad("m-orelha", [["0", "#7cb35a"], ["1", "#3f8238"]], "1", "1");
-    grad("m-grao", [["0", "#e3cc9a"], ["1", "#b48d55"]], "1", "1");
-    var rg = mk("radialGradient", { id: "m-sol", cx: ".5", cy: ".5", r: ".5" }, defs);
-    mk("stop", { offset: "0", "stop-color": "rgba(255,226,160,.55)" }, rg); mk("stop", { offset: "1", "stop-color": "rgba(255,226,160,0)" }, rg);
-    var cp = mk("clipPath", { id: "m-clip" }, defs); mk("rect", { width: "320", height: "400", rx: "14" }, cp);
+    function sprite(desenha, blur) {
+      var c = document.createElement("canvas"); c.width = c.height = S;
+      var g = c.getContext("2d");
+      if (blur) g.filter = "blur(" + blur + "px)";
+      g.translate(S / 2, S / 2); desenha(g); return c;
+    }
+    function grao(cor1, cor2, sulco) {
+      return function (g) {
+        g.rotate(-.35);
+        var gr = g.createRadialGradient(-10, -12, 4, 0, 0, 46);
+        gr.addColorStop(0, cor1); gr.addColorStop(1, cor2);
+        g.fillStyle = gr; g.beginPath(); g.ellipse(0, 0, 30, 40, 0, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = sulco; g.lineWidth = 4.5; g.lineCap = "round";
+        g.beginPath(); g.moveTo(-3, -32); g.bezierCurveTo(10, -12, -12, 10, 3, 32); g.stroke();
+        g.globalAlpha = .28; g.fillStyle = "#fff"; g.beginPath(); g.ellipse(-12, -16, 7, 13, -.4, 0, Math.PI * 2); g.fill();
+      };
+    }
+    function cereja(g) {
+      var gr = g.createRadialGradient(-12, -14, 4, 0, 0, 40);
+      gr.addColorStop(0, "#e0453f"); gr.addColorStop(.6, "#a71d26"); gr.addColorStop(1, "#5e0d14");
+      g.fillStyle = gr; g.beginPath(); g.ellipse(0, 0, 34, 31, 0, 0, Math.PI * 2); g.fill();
+      g.globalAlpha = .45; g.fillStyle = "#fff"; g.beginPath(); g.ellipse(-12, -13, 8, 6, -.5, 0, Math.PI * 2); g.fill();
+      g.globalAlpha = 1; g.fillStyle = "#3b0a0e"; g.beginPath(); g.arc(14, 16, 3, 0, Math.PI * 2); g.fill();
+    }
+    function folha(g) {
+      g.rotate(-.5);
+      var gr = g.createLinearGradient(-50, -10, 50, 10);
+      gr.addColorStop(0, "#2f7a3c"); gr.addColorStop(1, "#174a26");
+      g.fillStyle = gr; g.beginPath();
+      g.moveTo(-56, 0);
+      g.bezierCurveTo(-36, -26, 22, -30, 56, 0);
+      g.bezierCurveTo(22, 30, -36, 26, -56, 0); g.fill();
+      g.strokeStyle = "rgba(210,235,200,.45)"; g.lineWidth = 2.2;
+      g.beginPath(); g.moveTo(-52, 0); g.quadraticCurveTo(0, -3, 52, 0); g.stroke();
+      g.lineWidth = 1.2; g.strokeStyle = "rgba(210,235,200,.25)";
+      for (var k = -3; k <= 3; k++) { if (!k) continue; var x = k * 12; g.beginPath(); g.moveTo(x, -1); g.quadraticCurveTo(x + 8, -10, x + 14, -16); g.moveTo(x, 1); g.quadraticCurveTo(x + 8, 10, x + 14, 16); g.stroke(); }
+    }
+    var tipos = [
+      { d: grao("#8a5a35", "#3a2213", "#24130a"), p: .38, base: 22 },   // grão torrado
+      { d: grao("#d7d1a4", "#8f8b5e", "#6c6842"), p: .14, base: 20 },   // grão cru
+      { d: cereja, p: .2, base: 17 },                                    // cereja
+      { d: folha, p: .28, base: 34 },                                     // folha
+    ];
+    tipos.forEach(function (tp) { tp.n = sprite(tp.d, 0); tp.b = sprite(tp.d, 3.2); });
+    var escolhe = function () { var r = rnd(), a = 0; for (var i = 0; i < tipos.length; i++) { a += tipos[i].p; if (r <= a) return tipos[i]; } return tipos[0]; };
 
-    var cena = mk("g", { "clip-path": "url(#m-clip)" }, svg);
-    var sol = mk("circle", { cx: "262", cy: "58", r: "120", fill: "url(#m-sol)" }, cena);
-    var SUP = "M0 262 C 60 256, 110 266, 160 261 S 260 256, 320 262";
-    mk("path", { d: SUP + " L320 400 L0 400Z", fill: "url(#m-solo)" }, cena);
-    var cores = ["#a2533a", "#6e2c1a", "#c27a52", "#3a170d", "#8f4a2e"];
-    for (var i = 0; i < 90; i++) mk("circle", { cx: (rnd() * 320).toFixed(1), cy: (268 + rnd() * 130).toFixed(1), r: (.6 + rnd() * 1.8).toFixed(1), fill: cores[i % 5], opacity: (.5 + rnd() * .5).toFixed(2) }, cena);
-    for (var j = 0; j < 4; j++) mk("ellipse", { cx: (30 + rnd() * 260).toFixed(0), cy: (300 + rnd() * 80).toFixed(0), rx: (5 + rnd() * 6).toFixed(1), ry: (3 + rnd() * 3).toFixed(1), fill: "#9a6a48", opacity: ".55" }, cena);
-    var umido = mk("ellipse", { cx: "160", cy: "290", rx: "70", ry: "34", fill: "#1a0a05", opacity: "0" }, cena);
-    mk("path", { d: SUP, fill: "none", stroke: "rgba(255,220,190,.18)", "stroke-width": "1.2" }, cena);
+    var parts = [];
+    function nova(p, topo) {
+      var z = .35 + rnd() * .65;                         // profundidade: 1 = perto
+      var mob = W < 760;
+      p.t = escolhe(); p.z = z;
+      p.s = p.t.base * (mob ? .8 : 1) * (.55 + z * .75);
+      p.x = mob ? rnd() * W : W * (.5 + Math.pow(rnd(), .8) * .52);
+      p.y = topo ? -p.s * 2 - rnd() * H * .3 : rnd() * H;
+      p.vy = (10 + rnd() * 16) * (.5 + z * .7);
+      p.rot = rnd() * Math.PI * 2; p.vr = (rnd() - .5) * (p.t.d === folha ? 1.1 : .7);
+      p.fase = rnd() * Math.PI * 2; p.amp = (p.t.d === folha ? 26 : 10) * z;
+      p.a = (mob ? .5 : .78) * (.5 + z * .5);
+      return p;
+    }
+    function medir() {
+      var r = hero.getBoundingClientRect(); W = r.width; H = r.height;
+      graosCv.width = Math.round(W * DPR); graosCv.height = Math.round(H * DPR);
+      graosCv.style.width = W + "px"; graosCv.style.height = H + "px";
+      var alvo = W < 760 ? 8 : W < 1200 ? 12 : 15;
+      while (parts.length < alvo) parts.push(nova({}, false));
+      parts.length = alvo;
+    }
 
-    /* raízes */
-    var gRaiz = mk("g", { fill: "none", stroke: "#e9d7b8", "stroke-linecap": "round" }, cena);
-    var raiz = mk("path", { d: "M160 290 C 158 312, 165 336, 159 360 S 156 384, 158 398", "stroke-width": "2.4", pathLength: "1", "stroke-dasharray": "1", "stroke-dashoffset": "1" }, gRaiz);
-    var lat = [["M159 312 C 150 318, 140 320, 128 330", 4.2], ["M161 326 C 172 332, 184 334, 194 346", 4.8], ["M159 346 C 148 352, 140 360, 134 372", 5.6], ["M160 362 C 170 368, 176 378, 182 390", 6.2]].map(function (l) {
-      return { el: mk("path", { d: l[0], "stroke-width": "1.2", pathLength: "1", "stroke-dasharray": "1", "stroke-dashoffset": "1", opacity: ".85" }, gRaiz), t: l[1] };
+    var mx = 0, my = 0, tx = 0, ty = 0;
+    if (window.matchMedia("(hover: hover)").matches) hero.addEventListener("pointermove", function (e) {
+      tx = (e.clientX / window.innerWidth - .5); ty = (e.clientY / window.innerHeight - .5);
     });
 
-    /* planta: caule, orelhas de onça, folhas, grão */
-    var planta = mk("g", {}, cena);
-    var caule = mk("path", { fill: "none", "stroke-width": "4.2", "stroke-linecap": "round" }, planta);
-    var folhaD = function (L, w) { return "M0 0 C " + L * .25 + " " + -w + ", " + L * .7 + " " + -w * .9 + ", " + L + " 0 C " + L * .7 + " " + w * .9 + ", " + L * .25 + " " + w + ", 0 0Z"; };
-    var ORELHA = "M0 0 C 4 -15, 30 -22, 42 -9 C 49 -1, 40 13, 22 12 C 11 11, 3 6, 0 0Z";
-    var orelhas = [-1, 1].map(function (lado) {
-      var g = mk("g", {}, planta), inner = mk("g", {}, g);
-      mk("path", { d: ORELHA, fill: "url(#m-orelha)" }, inner);
-      mk("path", { d: "M2 0 Q 20 -4 38 -6", stroke: "rgba(230,245,210,.35)", "stroke-width": "1", fill: "none" }, inner);
-      return { g: g, inner: inner, lado: lado };
-    });
-    var folhas = [[-1, 60, 15], [1, 60, 15], [-1, 30, 8], [1, 30, 8]].map(function (f) {
-      var g = mk("g", {}, planta), inner = mk("g", {}, g);
-      mk("path", { d: folhaD(f[1], f[2]), fill: "url(#m-folha)" }, inner);
-      mk("path", { d: "M3 0 Q " + f[1] * .5 + " -1.5 " + (f[1] - 4) + " 0", stroke: "rgba(220,240,210,.3)", "stroke-width": "1", fill: "none" }, inner);
-      return { g: g, inner: inner, lado: f[0], L: f[1] };
-    });
-    var grao = mk("g", {}, planta);
-    var graoIn = mk("g", {}, grao);
-    mk("ellipse", { rx: "11", ry: "8", fill: "url(#m-grao)" }, graoIn);
-    mk("path", { d: "M-8 0 C -3 -2, 3 2, 8 0", stroke: "#8a6634", "stroke-width": "1.3", fill: "none", "stroke-linecap": "round" }, graoIn);
-
-    /* gotas de água */
-    var gotas = [0, 1, 2].map(function (k) {
-      return { el: mk("path", { d: "M0 -7 C 3 -2, 5 1, 5 3 A 5 5 0 0 1 -5 3 C -5 1, -3 -2, 0 -7Z", fill: "#bfe3f2", opacity: "0" }, cena), x: 132 + k * 26, t: .15 + k * .5 };
-    });
-
-    /* formas do caule: base no colo da raiz, ponta segura o grão */
-    var B = [160, 290];
-    var ARCO = [[160, 246], [190, 236], [188, 264]];
-    var RETO = [[160, 262], [160, 232], [160, 204]];
-    var ALTO = [[160, 240], [160, 180], [160, 126]];
-
-    var info = { n: $("[data-muda-n]", muda), f: $("[data-muda-fase]", muda), t: $("[data-muda-txt]", muda), bar: $$("[data-muda-bar] i", muda) };
-    var faseAt = 0;
-    var CORTES = [0, 2.6, 5.4, 8.0, 11.0], FIM = 15.2, CICLO = 16.4;
-    var setInfo = function (t) {
-      var k = 0; CORTES.forEach(function (c, i) { if (t >= c) k = i; });
-      info.bar.forEach(function (b, i) {
-        var p = i < k ? 1 : i > k ? 0 : clamp((t - CORTES[k]) / ((CORTES[k + 1] || FIM) - CORTES[k]));
-        b.style.setProperty("--p", p.toFixed(3));
+    function pinta(dt, now) {
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, W, H);
+      mx += (tx - mx) * .05; my += (ty - my) * .05;
+      parts.sort(function (a, b) { return a.z - b.z; });
+      parts.forEach(function (p) {
+        p.y += p.vy * dt; p.rot += p.vr * dt;
+        if (p.y > H + p.s * 2) nova(p, true);
+        var x = p.x + Math.sin(now / 1800 + p.fase) * p.amp - mx * 40 * p.z;
+        var y = p.y - my * 24 * p.z;
+        var img = p.z < .55 ? p.t.b : p.t.n, k = p.s / (S * .32);
+        ctx.globalAlpha = p.a;
+        ctx.setTransform(DPR * k * Math.cos(p.rot), DPR * k * Math.sin(p.rot), -DPR * k * Math.sin(p.rot), DPR * k * Math.cos(p.rot), DPR * x, DPR * y);
+        ctx.drawImage(img, -S / 2, -S / 2);
       });
-      if (k !== faseAt) {
-        faseAt = k; muda.classList.add("troca");
-        setTimeout(function () { info.f.textContent = fases[k].n; info.t.textContent = fases[k].t; info.n.textContent = "0" + (k + 1) + " / 05"; muda.classList.remove("troca"); }, 260);
-      }
-    };
+      ctx.globalAlpha = 1;
+    }
 
-    var draw = function (t, now) {
-      /* água e solo úmido */
-      gotas.forEach(function (g) {
-        var q = clamp((t - g.t) / .7), y = lerp(24, 258, q * q);
-        g.el.setAttribute("transform", "translate(" + g.x + " " + y.toFixed(1) + ")");
-        g.el.setAttribute("opacity", (q > 0 && q < 1 ? .9 : 0).toString());
-      });
-      var some = sm(FIM - 1, FIM, t);
-      umido.setAttribute("opacity", (sm(.6, 2.2, t) * .45 * (1 - some)).toFixed(3));
-
-      /* raízes */
-      raiz.setAttribute("stroke-dashoffset", (1 - sm(1.3, 5.2, t)).toFixed(3));
-      lat.forEach(function (l) { l.el.setAttribute("stroke-dashoffset", (1 - sm(l.t, l.t + 1.6, t)).toFixed(3)); });
-      gRaiz.setAttribute("opacity", (1 - some).toFixed(3));
-
-      /* caule: nasce, faz o arco, endireita e cresce */
-      var a = sm(2.6, 4.6, t), r = sm(5.4, 7.2, t), h = sm(11.0, 13.4, t);
-      var pts = [0, 1, 2].map(function (i) {
-        var ax = lerp(B[0], ARCO[i][0], a), ay = lerp(B[1], ARCO[i][1], a);
-        var rx = lerp(ax, RETO[i][0], r), ry = lerp(ay, RETO[i][1], r);
-        return [lerp(rx, ALTO[i][0], h), lerp(ry, ALTO[i][1], h)];
-      });
-      caule.setAttribute("d", "M" + B[0] + " " + B[1] + " C " + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(", "));
-      caule.setAttribute("stroke", a < .02 ? "transparent" : (r > .5 ? "#5e9a45" : "#a9c97a"));
-      caule.setAttribute("stroke-width", (3 + r * 1.2 + h * .8).toFixed(2));
-      var ponta = pts[2];
-
-      /* grão: incha, sobe na ponta e cai quando a orelha de onça abre */
-      var incha = 1 + .14 * sm(.8, 2.2, t);
-      var cai = sm(8.0, 9.2, t);
-      var gx = a > 0 ? ponta[0] : 160, gy = a > 0 ? ponta[1] : 290;
-      var ang = lerp(90, 0, r) * (a > 0 ? 1 : 0);
-      grao.setAttribute("transform", "translate(" + (gx + cai * 26).toFixed(1) + " " + (gy - 6 * (1 - cai) * r + cai * cai * 70).toFixed(1) + ") rotate(" + (ang + cai * 130).toFixed(1) + ")");
-      graoIn.setAttribute("transform", "scale(" + incha.toFixed(3) + ")");
-      grao.setAttribute("opacity", (1 - sm(8.6, 9.4, t)).toFixed(3));
-
-      /* orelhas de onça: abrem na ponta do soldadinho e ficam no nó */
-      var abre = sm(8.0, 9.6, t), noY = lerp(RETO[2][1], 206, h);
-      orelhas.forEach(function (o) {
-        var rot = lerp(-80, -8, abre);
-        o.g.setAttribute("transform", "translate(160 " + noY.toFixed(1) + ") scale(" + o.lado + " 1) rotate(" + rot.toFixed(1) + ")");
-        o.inner.setAttribute("transform", "scale(" + (abre * (1 + h * .15)).toFixed(3) + ")");
-      });
-
-      /* primeiras folhas verdadeiras no alto */
-      folhas.forEach(function (f, i) {
-        var ini = i < 2 ? 11.4 : 12.6, s = sm(ini, ini + 1.6, t);
-        var y = i < 2 ? ponta[1] + 14 : ponta[1] + 2;
-        f.g.setAttribute("transform", "translate(160 " + y.toFixed(1) + ") scale(" + f.lado + " 1) rotate(" + lerp(-70, i < 2 ? -24 : -48, s).toFixed(1) + ")");
-        f.inner.setAttribute("transform", "scale(" + s.toFixed(3) + ")");
-      });
-
-      /* brisa e saída */
-      var brisa = Math.sin(now / 1500) * 1.6 * r;
-      planta.setAttribute("transform", "rotate(" + brisa.toFixed(2) + " 160 290) translate(160 290) scale(1.22) translate(-160 -290)");
-      planta.setAttribute("opacity", (1 - some).toFixed(3));
-      sol.setAttribute("opacity", (.6 + Math.sin(now / 2600) * .25).toFixed(3));
-      setInfo(t);
-    };
-
-    var fixo = /[?&]muda=([\d.]+)/.exec(location.search);
-    if (fixo) { draw(+fixo[1], 0); return; }
-    if (reduce) { draw(14, 0); return; }
-    var inicio = (doc.classList.contains("intro") ? 1500 : 0) + 900, t0 = null, visivel = true, raf = 0;
+    medir();
+    var rz = 0;
+    window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(medir, 150); });
+    if (reduce) { pinta(0, 0); return; }
+    var last = 0, visivel = true, raf = 0;
     function loop(now) {
       raf = 0;
-      if (!t0) t0 = now;
-      var el = Math.max(0, now - t0 - inicio) / 1000;
-      draw(el % CICLO, now);
+      var dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now;
+      pinta(dt, now);
       if (visivel) raf = requestAnimationFrame(loop);
     }
-    if (hasIO) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; if (visivel && !raf) raf = requestAnimationFrame(loop); }).observe(muda);
+    if (hasIO) new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; if (visivel && !raf) { last = 0; raf = requestAnimationFrame(loop); } }).observe(hero);
     raf = requestAnimationFrame(loop);
   })();
 
