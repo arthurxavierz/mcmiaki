@@ -134,7 +134,7 @@
   var fitT = 0;
   window.addEventListener("resize", function () { clearTimeout(fitT); fitT = setTimeout(fitTitles, 120); });
 
-  /* ---------- Hero: grãos, cerejas e folhas de café flutuando ----------
+  /* ---------- Hero: partículas brancas de café flutuando ----------
      Cada peça é desenhada uma vez num canvas próprio (nítida e desfocada)
      e depois só é movida; as do fundo ficam menores, mais lentas e desfocadas. */
   var graosCv = $("[data-graos]");
@@ -150,42 +150,31 @@
       if (blur) g.filter = "blur(" + blur + "px)";
       g.translate(S / 2, S / 2); desenha(g); return c;
     }
-    function grao(cor1, cor2, sulco) {
-      return function (g) {
-        g.rotate(-.35);
-        var gr = g.createRadialGradient(-10, -12, 4, 0, 0, 46);
-        gr.addColorStop(0, cor1); gr.addColorStop(1, cor2);
-        g.fillStyle = gr; g.beginPath(); g.ellipse(0, 0, 30, 40, 0, 0, Math.PI * 2); g.fill();
-        g.strokeStyle = sulco; g.lineWidth = 4.5; g.lineCap = "round";
-        g.beginPath(); g.moveTo(-3, -32); g.bezierCurveTo(10, -12, -12, 10, 3, 32); g.stroke();
-        g.globalAlpha = .28; g.fillStyle = "#fff"; g.beginPath(); g.ellipse(-12, -16, 7, 13, -.4, 0, Math.PI * 2); g.fill();
-      };
-    }
-    function cereja(g) {
-      var gr = g.createRadialGradient(-12, -14, 4, 0, 0, 40);
-      gr.addColorStop(0, "#e0453f"); gr.addColorStop(.6, "#a71d26"); gr.addColorStop(1, "#5e0d14");
-      g.fillStyle = gr; g.beginPath(); g.ellipse(0, 0, 34, 31, 0, 0, Math.PI * 2); g.fill();
-      g.globalAlpha = .45; g.fillStyle = "#fff"; g.beginPath(); g.ellipse(-12, -13, 8, 6, -.5, 0, Math.PI * 2); g.fill();
-      g.globalAlpha = 1; g.fillStyle = "#3b0a0e"; g.beginPath(); g.arc(14, 16, 3, 0, Math.PI * 2); g.fill();
+    /* peças brancas minimalistas: grão chapado com o sulco vazado, folha em traço e pontos de luz */
+    function grao(g) {
+      g.rotate(-.35);
+      g.fillStyle = "#fff"; g.beginPath(); g.ellipse(0, 0, 28, 38, 0, 0, Math.PI * 2); g.fill();
+      g.globalCompositeOperation = "destination-out";
+      g.lineWidth = 6; g.lineCap = "round";
+      g.beginPath(); g.moveTo(-2, -30); g.bezierCurveTo(10, -10, -11, 10, 2, 30); g.stroke();
     }
     function folha(g) {
       g.rotate(-.5);
-      var gr = g.createLinearGradient(-50, -10, 50, 10);
-      gr.addColorStop(0, "#2f7a3c"); gr.addColorStop(1, "#174a26");
-      g.fillStyle = gr; g.beginPath();
-      g.moveTo(-56, 0);
-      g.bezierCurveTo(-36, -26, 22, -30, 56, 0);
-      g.bezierCurveTo(22, 30, -36, 26, -56, 0); g.fill();
-      g.strokeStyle = "rgba(210,235,200,.45)"; g.lineWidth = 2.2;
-      g.beginPath(); g.moveTo(-52, 0); g.quadraticCurveTo(0, -3, 52, 0); g.stroke();
-      g.lineWidth = 1.2; g.strokeStyle = "rgba(210,235,200,.25)";
-      for (var k = -3; k <= 3; k++) { if (!k) continue; var x = k * 12; g.beginPath(); g.moveTo(x, -1); g.quadraticCurveTo(x + 8, -10, x + 14, -16); g.moveTo(x, 1); g.quadraticCurveTo(x + 8, 10, x + 14, 16); g.stroke(); }
+      g.strokeStyle = "#fff"; g.lineWidth = 3.4; g.lineJoin = "round"; g.lineCap = "round";
+      g.beginPath(); g.moveTo(-54, 0);
+      g.bezierCurveTo(-34, -24, 22, -28, 54, 0);
+      g.bezierCurveTo(22, 28, -34, 24, -54, 0); g.stroke();
+      g.lineWidth = 2.4; g.beginPath(); g.moveTo(-62, 0); g.quadraticCurveTo(0, -2, 46, 0); g.stroke();
+    }
+    function ponto(g) {
+      var gr = g.createRadialGradient(0, 0, 0, 0, 0, 30);
+      gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(.35, "rgba(255,255,255,.9)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+      g.fillStyle = gr; g.beginPath(); g.arc(0, 0, 30, 0, Math.PI * 2); g.fill();
     }
     var tipos = [
-      { d: grao("#8a5a35", "#3a2213", "#24130a"), p: .38, base: 22 },   // grão torrado
-      { d: grao("#d7d1a4", "#8f8b5e", "#6c6842"), p: .14, base: 20 },   // grão cru
-      { d: cereja, p: .2, base: 17 },                                    // cereja
-      { d: folha, p: .28, base: 34 },                                     // folha
+      { d: grao, p: .34, base: 15 },    // grão de café
+      { d: folha, p: .26, base: 30 },   // folha em traço
+      { d: ponto, p: .4, base: 6 },     // ponto de luz
     ];
     tipos.forEach(function (tp) { tp.n = sprite(tp.d, 0); tp.b = sprite(tp.d, 3.2); });
     var escolhe = function () { var r = rnd(), a = 0; for (var i = 0; i < tipos.length; i++) { a += tipos[i].p; if (r <= a) return tipos[i]; } return tipos[0]; };
@@ -200,15 +189,15 @@
       p.y = topo ? -p.s * 2 - rnd() * H * .3 : rnd() * H;
       p.vy = (10 + rnd() * 16) * (.5 + z * .7);
       p.rot = rnd() * Math.PI * 2; p.vr = (rnd() - .5) * (p.t.d === folha ? 1.1 : .7);
-      p.fase = rnd() * Math.PI * 2; p.amp = (p.t.d === folha ? 26 : 10) * z;
-      p.a = (mob ? .5 : .78) * (.5 + z * .5);
+      p.fase = rnd() * Math.PI * 2; p.amp = (p.t.d === folha ? 26 : p.t.d === ponto ? 18 : 10) * z;
+      p.a = (mob ? .4 : .55) * (.45 + z * .55);
       return p;
     }
     function medir() {
       var r = hero.getBoundingClientRect(); W = r.width; H = r.height;
       graosCv.width = Math.round(W * DPR); graosCv.height = Math.round(H * DPR);
       graosCv.style.width = W + "px"; graosCv.style.height = H + "px";
-      var alvo = W < 760 ? 8 : W < 1200 ? 12 : 15;
+      var alvo = W < 760 ? 12 : W < 1200 ? 18 : 24;
       while (parts.length < alvo) parts.push(nova({}, false));
       parts.length = alvo;
     }
